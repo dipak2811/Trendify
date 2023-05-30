@@ -10,12 +10,13 @@ import {
 import { getAuth } from "firebase/auth";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-import { setPageStatus } from "../redux/slice/HomePage";
+import { setPageStatus, setYourPosts } from "../redux/slice/HomePage";
 
 const YourPosts = () => {
   const auth = getAuth(app);
   const dispatch = useDispatch();
   const db = getFirestore(app);
+  const [posts, setPosts] = useState<any[]>([]);
   useEffect(() => {
     document.title = "Social-App - YourPosts";
     const pageStatus = {
@@ -28,8 +29,8 @@ const YourPosts = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
+    dispatch(setYourPosts(posts));
   }, []);
-  const [posts, setPosts] = useState<any[]>([]);
   const postsRef = collection(db, "posts");
   const q = query(postsRef, where("userId", "==", auth?.currentUser?.uid));
   const getPosts = async () => {
@@ -46,7 +47,7 @@ const YourPosts = () => {
   }, [auth?.currentUser?.uid, db]);
   return (
     <div>
-      <Feed yourPosts={posts} />
+      <Feed />
     </div>
   );
 };

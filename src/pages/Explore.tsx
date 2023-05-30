@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { app } from "../firebase";
 import Loader from "../components/Loader";
-import { setPageStatus } from "../redux/slice/HomePage";
+import { setExplorePosts, setPageStatus } from "../redux/slice/HomePage";
 
 const Explore = () => {
   const dispatch = useDispatch();
@@ -41,13 +41,14 @@ const Explore = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
+    dispatch(setExplorePosts(posts));
   }, []);
   if (posts?.length === 0) {
     return <Loader />;
   }
   return (
     <div>
-      <Feed explorePosts={posts} />
+      <Feed />
     </div>
   );
 };

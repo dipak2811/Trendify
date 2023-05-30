@@ -9,10 +9,13 @@ import {
 import { getAuth } from "firebase/auth";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-import { setPageStatus } from "../redux/slice/HomePage";
+import { setFollowersData, setPageStatus } from "../redux/slice/HomePage";
 
 const Followers = () => {
   const dispatch = useDispatch();
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const [followers, setFollowers] = useState<any>();
   useEffect(() => {
     document.title = "Followers";
     const pageStatus = {
@@ -25,12 +28,8 @@ const Followers = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
+    dispatch(setFollowersData(followers));
   }, []);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  const [followers, setFollowers] = useState<DocumentData | undefined>(
-    undefined
-  );
   const userRef = collection(
     db,
     "users",
@@ -50,7 +49,7 @@ const Followers = () => {
   }, [db, auth?.currentUser?.uid]);
   return (
     <div>
-      <Feed followersData={followers} />
+      <Feed />
     </div>
   );
 };

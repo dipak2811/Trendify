@@ -14,11 +14,11 @@ import {
 } from "firebase/firestore";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-import { setPageStatus } from "../redux/slice/HomePage";
+import { setPageStatus, setSearchPosts } from "../redux/slice/HomePage";
 
 const Search = () => {
   const dispatch = useDispatch();
-
+  const [posts, setPosts] = useState<any[]>([]);
   useEffect(() => {
     document.title = "Search results";
 
@@ -32,10 +32,10 @@ const Search = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
+    dispatch(setSearchPosts(posts));
   }, []);
   const db = getFirestore(app);
   const { caption }: Readonly<Params<string>> = useParams();
-  const [posts, setPosts] = useState<any[]>([]);
   const postsRef = collection(db, "posts");
   const q = query(
     postsRef,
@@ -70,7 +70,7 @@ const Search = () => {
         marginRight="1rem"
       >
         <RightSidebar />
-        <Feed searchPosts={posts} />
+        <Feed />
         <LeftSidebar />
       </Grid>
     </div>

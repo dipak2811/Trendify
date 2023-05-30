@@ -1,40 +1,37 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Feed from "../components/Feed";
 import {
   collection,
   onSnapshot,
   getFirestore,
   query,
-  limit,
+  orderBy,
 } from "firebase/firestore";
 import { app } from "../firebase";
-import Loader from "../components/Loader";
 import { setPageStatus, setPosts } from "../redux/slice/HomePage";
 
-const Explore = () => {
+const Home = () => {
   const dispatch = useDispatch();
-  const posts = useSelector((state: any) => state.homePage.posts);
-  const db = getFirestore(app);
-  const postsRef = collection(db, "posts");
-  const q = query(postsRef, limit(5));
 
-  const getPosts = async () => {
-    onSnapshot(q, (snapshot) => {
-      const posts = snapshot?.docs?.map((doc) => ({
+  
+  useEffect(() => {
+    document.title = "Trendify";
+
+    const db = getFirestore(app);
+    const postsRef = collection(db, "posts");
+    const q = query(postsRef, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const posts = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
       dispatch(setPosts(posts));
     });
-  };
 
-  useEffect(() => {
-    document.title = "Explore";
-
-    getPosts();
     const pageStatus = {
-      isExplore: true,
+      isExplore: false,
       isLibrary: false,
       isYourPosts: false,
       isSearch: false,
@@ -43,11 +40,11 @@ const Explore = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
-  }, []);
 
-  if (posts?.length === 0) {
-    return <Loader />;
-  }
+    return () => {
+      unsubscribe();
+    };
+  }, [dispatch]);
 
   return (
     <div>
@@ -56,4 +53,4 @@ const Explore = () => {
   );
 };
 
-export default Explore;
+export default Home;

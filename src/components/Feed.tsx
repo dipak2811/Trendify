@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Avatar,
   Button,
@@ -7,7 +8,6 @@ import {
   Tag,
   Tooltip,
 } from "@chakra-ui/react";
-import React from "react";
 import Post from "./Post";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -34,7 +34,14 @@ type Props = {
 };
 
 const Feed = (props: Props) => {
-  const pageStatus = useSelector((state: any) => state.pageStatus);
+  const pageDetail = useSelector((state: any) => state.pageStatus);
+  const pageStatus = pageDetail.pageStatus;
+  const pagePosts = pageDetail.posts;
+  const libraryPosts = pageDetail.libraryPosts;
+  const profilePosts = pageDetail.profilePosts;
+  const followersData = pageDetail.followersData;
+  const searchPosts = pageDetail.searchPosts;
+
   const navigate = useNavigate();
   return pageStatus?.isExplore ? (
     <Flex
@@ -64,7 +71,7 @@ const Feed = (props: Props) => {
       <Heading as="h4" size="md">
         Saved posts
       </Heading>
-      {props?.libraryPosts?.map((post, index) => (
+      {libraryPosts?.map((post:Posts, index:number) => (
         <Post key={index} posts={post} />
       ))}
     </Flex>
@@ -111,7 +118,7 @@ const Feed = (props: Props) => {
         Search results
       </Heading>
       </Flex>
-      {props?.searchPosts?.length === 0 ? (
+      {searchPosts?.length === 0 ? (
         <Flex
           width="100%"
           justifyContent="center"
@@ -131,7 +138,7 @@ const Feed = (props: Props) => {
           </Heading>
         </Flex>
       ) : (
-        props?.searchPosts?.map((post, index) => (
+        searchPosts?.map((post:Posts, index:number) => (
           <Post key={index} posts={post} />
         ))
       )}
@@ -148,7 +155,7 @@ const Feed = (props: Props) => {
       <Heading as="h4" size="md">
         {props?.username} posts
       </Heading>
-      {props?.profilePosts?.length === 0 ? (
+      {profilePosts.length === 0 ? (
         <Flex
           width="100%"
           justifyContent="center"
@@ -162,7 +169,7 @@ const Feed = (props: Props) => {
           </Heading>
         </Flex>
       ) : (
-        props?.profilePosts?.map((post, index) => (
+        profilePosts.map((post:Posts, index:number) => (
           <Post key={index} posts={post} />
         ))
       )}
@@ -177,7 +184,7 @@ const Feed = (props: Props) => {
       height="max-content"
     >
       <Flex gap="2rem" alignItems="center" flexWrap="wrap" marginBottom="1rem">
-        {props?.followersData?.map((user: any, index: number) => (
+        {followersData?.map((user: any, index: number) => (
           <Tooltip label={user?.username} openDelay={400} key={index}>
             <Avatar
               width="16"
@@ -211,7 +218,7 @@ const Feed = (props: Props) => {
         <Tag>Music</Tag>
         <Tag>Anime</Tag>
       </Flex>
-      {props?.homePosts?.map((post, index) => (
+      {pagePosts?.map((post:Posts, index:number) => (
         <Post key={index} posts={post} />
       ))}
     </Flex>
