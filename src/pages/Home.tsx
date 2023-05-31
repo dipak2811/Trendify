@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { app } from "../firebase";
 import { setPageStatus, setPosts } from "../redux/slice/HomePage";
-
+import { Posts } from "../components/Feed";
 const Home = () => {
   const dispatch = useDispatch();
 
@@ -23,9 +23,9 @@ const Home = () => {
     const q = query(postsRef, orderBy("createdAt", "desc"));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const posts = snapshot.docs.map((doc) => ({
+      const posts:Posts[] = snapshot.docs.map((doc) => ({
+        ...(doc.data() as Posts),
         id: doc.id,
-        ...doc.data(),
       }));
       dispatch(setPosts(posts));
     });

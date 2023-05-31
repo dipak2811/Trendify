@@ -32,7 +32,6 @@ function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const urlDetails = useLocation();
   let showNav: boolean = false;
-  console.log(urlDetails);
   if (
     urlDetails.pathname.includes("/login") ||
     urlDetails.pathname.includes("/signup")

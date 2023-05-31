@@ -285,8 +285,7 @@ const ProfileSidebar = (props: Props) => {
         </Menu>
       </Flex>
       <Heading marginBottom="1rem" as="h4" size="sm" color="gray.500">
-        {/* @ts-ignore */}
-        Joined {format(props?.createdAt?.toDate())}
+      Joined {format(new Date(props?.createdAt))}
       </Heading>
     </Flex>
   );

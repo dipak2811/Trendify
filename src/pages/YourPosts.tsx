@@ -7,16 +7,18 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, Unsubscribe } from "firebase/auth";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { setPageStatus, setYourPosts } from "../redux/slice/HomePage";
+import { Posts } from "../components/Feed";
 
 const YourPosts = () => {
   const auth = getAuth(app);
   const dispatch = useDispatch();
   const db = getFirestore(app);
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Posts[]>([]);
+
   useEffect(() => {
     document.title = "Social-App - YourPosts";
     const pageStatus = {
@@ -29,22 +31,41 @@ const YourPosts = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
-    dispatch(setYourPosts(posts));
   }, []);
+
   const postsRef = collection(db, "posts");
   const q = query(postsRef, where("userId", "==", auth?.currentUser?.uid));
-  const getPosts = async () => {
-    onSnapshot(q, (snapshot) => {
-      const posts = snapshot?.docs?.map((doc) => ({
+
+  const getPosts = () => {
+    return onSnapshot(q, (snapshot) => {
+      const posts: Posts[] = snapshot.docs.map((doc) => ({
+        ...(doc.data() as Posts),
         id: doc.id,
-        ...doc.data(),
       }));
       setPosts(posts);
     });
   };
+
   useEffect(() => {
-    getPosts();
+    let unsubscribe: Unsubscribe | undefined;
+
+    const fetchPosts = async () => {
+      unsubscribe = getPosts();
+    };
+
+    fetchPosts();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, [auth?.currentUser?.uid, db]);
+
+  useEffect(() => {
+    dispatch(setYourPosts(posts));
+  }, [posts]);
+
   return (
     <div>
       <Feed />

@@ -30,11 +30,11 @@ const LoginPage: React.FC = () => {
   const handleLogin = async () => {
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      setError(error.message as string);
+    } catch (error) {
+      setError((error as Error).message);
       toast({
         title: "Error",
-        description: error.message,
+        description: (error as Error).message,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -53,11 +53,11 @@ const LoginPage: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-    } catch (error: any) {
-      setError(error.message as string);
+    } catch (error) {
+      setError((error as Error).message as string);
       toast({
         title: "Error",
-        description: error.message,
+        description: (error as Error).message,
         status: "error",
         duration: 3000,
         isClosable: true,

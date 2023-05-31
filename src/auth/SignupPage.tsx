@@ -61,11 +61,11 @@ const SignupPage: React.FC = () => {
         email: user?.email,
       });
       navigate("/login");
-    } catch (error: any) {
-      setError(error.message as string);
+    } catch (error) {
+      setError((error as Error).message);
       toast({
         title: "Error",
-        description: error.message,
+        description: (error as Error).message,
         status: "error",
         duration: 3000,
         isClosable: true,

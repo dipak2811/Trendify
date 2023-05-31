@@ -12,7 +12,7 @@ import Post from "./Post";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-type Posts = {
+export type Posts = {
   caption: string;
   createdAt: string;
   image: string;
@@ -41,6 +41,8 @@ const Feed = (props: Props) => {
   const profilePosts = pageDetail.profilePosts;
   const followersData = pageDetail.followersData;
   const searchPosts = pageDetail.searchPosts;
+  const explorePosts = pageDetail.explorePosts;
+  const yourPosts = pageDetail.yourPosts;
 
   const navigate = useNavigate();
   return pageStatus?.isExplore ? (
@@ -55,7 +57,7 @@ const Feed = (props: Props) => {
       <Heading as="h4" size="md">
         Trending posts
       </Heading>
-      {props?.explorePosts?.map((post, index) => (
+      {explorePosts.map((post: Posts, index: number) => (
         <Post key={index} posts={post} />
       ))}
     </Flex>
@@ -71,7 +73,7 @@ const Feed = (props: Props) => {
       <Heading as="h4" size="md">
         Saved posts
       </Heading>
-      {libraryPosts?.map((post:Posts, index:number) => (
+      {libraryPosts?.map((post: Posts, index: number) => (
         <Post key={index} posts={post} />
       ))}
     </Flex>
@@ -87,7 +89,7 @@ const Feed = (props: Props) => {
       <Heading as="h4" size="md">
         Your posts
       </Heading>
-      {props?.yourPosts?.map((post, index) => (
+      {yourPosts?.map((post: any, index: number) => (
         <Post key={index} posts={post} />
       ))}
     </Flex>
@@ -100,8 +102,8 @@ const Feed = (props: Props) => {
       top="5.4rem"
       height="max-content"
     >
-      <Flex  width="30%" flexDirection="column">
-      <Button
+      <Flex width="30%" flexDirection="column">
+        <Button
           backgroundColor="#ACBCFF"
           variant="solid"
           borderRadius={24}
@@ -114,9 +116,9 @@ const Feed = (props: Props) => {
         >
           Clear Search
         </Button>
-      <Heading as="h4" size="md">
-        Search results
-      </Heading>
+        <Heading as="h4" size="md">
+          Search results
+        </Heading>
       </Flex>
       {searchPosts?.length === 0 ? (
         <Flex
@@ -138,7 +140,7 @@ const Feed = (props: Props) => {
           </Heading>
         </Flex>
       ) : (
-        searchPosts?.map((post:Posts, index:number) => (
+        searchPosts?.map((post: Posts, index: number) => (
           <Post key={index} posts={post} />
         ))
       )}
@@ -169,7 +171,7 @@ const Feed = (props: Props) => {
           </Heading>
         </Flex>
       ) : (
-        profilePosts.map((post:Posts, index:number) => (
+        profilePosts.map((post: Posts, index: number) => (
           <Post key={index} posts={post} />
         ))
       )}
@@ -218,7 +220,7 @@ const Feed = (props: Props) => {
         <Tag>Music</Tag>
         <Tag>Anime</Tag>
       </Flex>
-      {pagePosts?.map((post:Posts, index:number) => (
+      {pagePosts?.map((post: Posts, index: number) => (
         <Post key={index} posts={post} />
       ))}
     </Flex>

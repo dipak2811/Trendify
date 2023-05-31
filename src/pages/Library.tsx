@@ -11,7 +11,7 @@ import { app } from "../firebase";
 import { getAuth } from "firebase/auth";
 import { setPageStatus, setLibraryPosts } from "../redux/slice/HomePage";
 import { useDispatch } from "react-redux";
-
+import { Posts } from "../components/Feed";
 const Library = () => {
   const dispatch = useDispatch();
   const auth = getAuth(app);
@@ -31,7 +31,7 @@ const Library = () => {
     dispatch(setPageStatus(pageStatus));
   }, []);
 
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Posts[]>([]);
 
   const postsRef = collection(
     db,
@@ -44,14 +44,15 @@ const Library = () => {
   
   const getPosts = async () => {
     onSnapshot(q, (snapshot) => {
-      const posts = snapshot?.docs?.map((doc) => ({
+      const posts: Posts[] = snapshot?.docs?.map((doc) => ({
+        ...(doc.data() as Posts),
         id: doc.id,
-        ...doc.data(),
       }));
       setPosts(posts);
-      dispatch(setLibraryPosts(posts)); // Dispatch the setLibraryPosts action
+      dispatch(setLibraryPosts(posts));
     });
   };
+  
   
   useEffect(() => {
     getPosts();

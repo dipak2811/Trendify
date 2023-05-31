@@ -12,10 +12,10 @@ import {
 import { app } from "../firebase";
 import { getAuth } from "firebase/auth";
 import WhoToFollow from "../components/WhoToFollow";
+import { Follower } from "../pages/Followers";
 
 const LeftSidebar = () => {
   const auth = getAuth();
-  console.log(auth, "getAuth");
   const db = getFirestore(app);
   const [recommendedUsers, setRecommendedUsers] = useState<DocumentData[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -26,7 +26,6 @@ const LeftSidebar = () => {
         where("uid", "!=", auth?.currentUser?.uid),
         limit(2)
       );
-      console.log(qUser);
       const unsubscribe = onSnapshot(qUser, (snapshot) => {
         const users = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -43,12 +42,10 @@ const LeftSidebar = () => {
       console.error("Error fetching users:", error);
     }
   };
-  console.log(usersLoading, "userloading");
-  console.log(recommendedUsers, "recommendedUsers");
   useEffect(() => {
     setTimeout(() => {
       fetchUsers();
-    }, 700);
+    }, 1000);
   }, [db,auth]);
 
   const [isMobileOrTablet] = useMediaQuery("(max-width: 48em)");
@@ -88,7 +85,7 @@ const LeftSidebar = () => {
           {usersLoading ? (
             <div>Loading users...</div>
           ) : (
-            recommendedUsers.map((user: any) => (
+            recommendedUsers.map((user) => (
               <WhoToFollow
                 key={user.id}
                 userName={user?.username}

@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { Posts } from "../../components/Feed";
+import { Follower } from "../../pages/Followers";
 interface HomePageState {
-  posts: any[];
-  libraryPosts: any[],
-  explorePosts: any[],
-  yourPosts:any[],
-  searchPosts:any[],
-  followersData:any[],
+  posts: Posts[];
+  libraryPosts: Posts[],
+  explorePosts: Posts[],
+  yourPosts:Posts[],
+  searchPosts:Posts[],
+  followersData:Follower[],
   pageStatus: {
     isExplore: boolean;
     isLibrary: boolean;
@@ -38,22 +39,22 @@ const homePageSlice = createSlice({
   name: "homePage",
   initialState,
   reducers: {
-    setPosts: (state, action: PayloadAction<any[]>) => {
+    setPosts: (state, action: PayloadAction<Posts[]>) => {
       state.posts = action.payload;
     },
-    setLibraryPosts: (state, action: PayloadAction<any[]>) => {
+    setLibraryPosts: (state, action: PayloadAction<Posts[]>) => {
       state.libraryPosts = action.payload;
     },
-    setExplorePosts: (state, action: PayloadAction<any[]>) => {
+    setExplorePosts: (state, action: PayloadAction<Posts[]>) => {
       state.explorePosts = action.payload;
     },
-    setYourPosts: (state, action: PayloadAction<any[]>) => {
+    setYourPosts: (state, action: PayloadAction<Posts[]>) => {
       state.yourPosts = action.payload;
     },
-    setSearchPosts: (state, action: PayloadAction<any[]>) => {
+    setSearchPosts: (state, action: PayloadAction<Posts[]>) => {
       state.searchPosts = action.payload;
     },
-    setFollowersData: (state, action: PayloadAction<any[]>) => {
+    setFollowersData: (state, action: PayloadAction<Follower[]>) => {
       state.followersData = action.payload;
     },
     setPageStatus: (state, action: PayloadAction<HomePageState["pageStatus"]>) => {

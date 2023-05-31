@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import {
   Flex,
   Heading,
@@ -93,6 +93,8 @@ type Props = {
 };
 
 const Post = (props: Props) => {
+  console.log("post component");
+  
   const {
     isOpen: isCommentOpen,
     onOpen: onCommentOpen,
@@ -105,7 +107,7 @@ const Post = (props: Props) => {
     onOpen: onEditOpen,
     onClose: onEditClose,
   } = useDisclosure();
-  const cancelRef = React.useRef();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const db = getFirestore(app);
   const toast = useToast();
   const [loading, setLoading] = useState(false);
@@ -141,11 +143,19 @@ const Post = (props: Props) => {
   const storage = getStorage(app);
   const navigate = useNavigate();
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //@ts-ignore
-    setImageUrl(URL.createObjectURL(e?.target?.files[0]));
-    //@ts-ignore
-    setImage(e?.target?.files[0]);
+    const file = e.target.files?.[0];
+  
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const imageUrl = reader.result as string;
+        setImageUrl(imageUrl);
+        setImage(imageUrl);
+      };
+      reader.readAsDataURL(file);
+    }
   };
+  
   const [updateLoading, setUpdateLoading] = useState(false);
   const updatePost = async () => {
     setUpdateLoading(true);
@@ -175,12 +185,11 @@ const Post = (props: Props) => {
             status: "error",
             duration: 1000,
             isClosable: true,
-          }); 
+          });
           onEditClose();
         });
     } else {
-      //@ts-ignore
-      const storageRef = ref(storage, `/images/${image.name + Date.now()}`);
+      const storageRef = ref(storage, `/images/${Date.now()}`);
       //@ts-ignore
       const uploadTask = uploadBytesResumable(storageRef, image);
       uploadTask.on(
@@ -199,8 +208,7 @@ const Post = (props: Props) => {
         () => {
           getDownloadURL(uploadTask.snapshot.ref)
             .then(async (url) => {
-              //@ts-ignore
-              await updateDoc(doc(db, "posts", props?.posts?.id), {
+              await updateDoc(doc(collection(db, "posts"), props?.posts?.id), {
                 caption: caption,
                 image: url,
               })
@@ -258,11 +266,33 @@ const Post = (props: Props) => {
       isClosable: true,
     });
   };
+  function formatCreatedAt(createdAt: any) {
+    const milliseconds = createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000;
+    const timeElapsed = Date.now() - milliseconds;
+  
+    const minutes = Math.floor(timeElapsed / (1000 * 60));
+    if (minutes < 1) {
+      return "just now";
+    }
+  
+    if (minutes < 60) {
+      return `${minutes} minutes ago`;
+    }
+  
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) {
+      return `${hours} hours ago`;
+    }
+  
+    const days = Math.floor(hours / 24);
+    return `${days} days ago`;
+  }
+  
   const [likes, setLikes] = useState<QueryDocumentSnapshot[]>([]);
   useEffect(() => {
     if (props.posts?.id) {
       const unsubscribe = onSnapshot(
-        collection(db, 'posts', props.posts.id, 'likes'),
+        collection(db, "posts", props.posts.id, "likes"),
         (snapshot: QuerySnapshot) => {
           setLikes(snapshot.docs);
         }
@@ -274,9 +304,9 @@ const Post = (props: Props) => {
     }
   }, [db, props.posts?.id]);
   const [liked, setLiked] = useState(false);
-  useEffect(() => {
+  useEffect(() => {    
     setLiked(
-      likes?.findIndex((like: any) => like?.id === auth?.currentUser?.uid) !==
+      likes?.findIndex((like: QueryDocumentSnapshot) => like?.id === auth?.currentUser?.uid) !==
         -1
     );
   }, [likes]);
@@ -527,7 +557,8 @@ const Post = (props: Props) => {
             <Skeleton width="15rem" height="1rem" />
           ) : (
             <Heading as="h4" size="sm" color="gray.600">
-              {props?.posts?.createdAt && format(new Date(props?.posts?.createdAt))}
+              {props?.posts?.createdAt &&
+                formatCreatedAt(props.posts.createdAt)}
             </Heading>
           )}
         </Flex>
@@ -601,7 +632,6 @@ const Post = (props: Props) => {
             {/* delete alert dialog stuff here */}
             <AlertDialog
               isOpen={isOpen}
-              //@ts-ignore
               leastDestructiveRef={cancelRef}
               onClose={onClose}
             >
@@ -619,7 +649,6 @@ const Post = (props: Props) => {
                     {loading === true ? (
                       ""
                     ) : (
-                      //@ts-ignore
                       <Button ref={cancelRef} onClick={onClose}>
                         Cancel
                       </Button>
@@ -830,4 +859,4 @@ const Post = (props: Props) => {
   );
 };
 
-export default Post;
+export default memo(Post);
