@@ -80,7 +80,6 @@ const Profile = () => {
       setPosts(posts);
     });
   };
-  console.log(posts);
 
   useEffect(() => {
     getPosts();
@@ -96,12 +95,14 @@ const Profile = () => {
           <Button
             pos={"absolute"}
             right="0"
+            top={"7rem"}
+            zIndex="100"
             ref={btnRef}
             colorScheme="teal"
             onClick={onOpen}
             padding={0}
             background="#D6BCFA"
-          >
+          > 
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

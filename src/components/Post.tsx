@@ -93,8 +93,6 @@ type Props = {
 };
 
 const Post = (props: Props) => {
-  console.log("post component");
-  
   const {
     isOpen: isCommentOpen,
     onOpen: onCommentOpen,
@@ -144,7 +142,7 @@ const Post = (props: Props) => {
   const navigate = useNavigate();
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-  
+
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -155,7 +153,7 @@ const Post = (props: Props) => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   const [updateLoading, setUpdateLoading] = useState(false);
   const updatePost = async () => {
     setUpdateLoading(true);
@@ -267,27 +265,28 @@ const Post = (props: Props) => {
     });
   };
   function formatCreatedAt(createdAt: any) {
-    const milliseconds = createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000;
+    const milliseconds =
+      createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000;
     const timeElapsed = Date.now() - milliseconds;
-  
+
     const minutes = Math.floor(timeElapsed / (1000 * 60));
     if (minutes < 1) {
       return "just now";
     }
-  
+
     if (minutes < 60) {
       return `${minutes} minutes ago`;
     }
-  
+
     const hours = Math.floor(minutes / 60);
     if (hours < 24) {
       return `${hours} hours ago`;
     }
-  
+
     const days = Math.floor(hours / 24);
     return `${days} days ago`;
   }
-  
+
   const [likes, setLikes] = useState<QueryDocumentSnapshot[]>([]);
   useEffect(() => {
     if (props.posts?.id) {
@@ -304,10 +303,11 @@ const Post = (props: Props) => {
     }
   }, [db, props.posts?.id]);
   const [liked, setLiked] = useState(false);
-  useEffect(() => {    
+  useEffect(() => {
     setLiked(
-      likes?.findIndex((like: QueryDocumentSnapshot) => like?.id === auth?.currentUser?.uid) !==
-        -1
+      likes?.findIndex(
+        (like: QueryDocumentSnapshot) => like?.id === auth?.currentUser?.uid
+      ) !== -1
     );
   }, [likes]);
   const likePost = async () => {
@@ -565,10 +565,7 @@ const Post = (props: Props) => {
         {props?.posts?.userId === auth?.currentUser?.uid ? (
           <Menu>
             <MenuButton>
-              <IconButton
-                icon={<BiDotsVerticalRounded size="1.6rem" />}
-                aria-label="Shit"
-              />
+              <BiDotsVerticalRounded size="1.6rem" />
             </MenuButton>
             <MenuList>
               <MenuItem gap="0.5rem" onClick={onEditOpen}>

@@ -47,11 +47,11 @@ const Feed = (props: Props) => {
   const navigate = useNavigate();
   return pageStatus?.isExplore ? (
     <Flex
+      marginTop={5}
       flexDirection="column"
       gap="1rem"
       width="100%"
       position="sticky"
-      top="5.4rem"
       height="max-content"
     >
       <Heading as="h4" size="md">
@@ -67,7 +67,7 @@ const Feed = (props: Props) => {
       gap="1rem"
       width="100%"
       position="sticky"
-      top="5.4rem"
+      marginTop={5}
       height="max-content"
     >
       <Heading as="h4" size="md">
@@ -83,7 +83,7 @@ const Feed = (props: Props) => {
       gap="1rem"
       width="100%"
       position="sticky"
-      top="5.4rem"
+      marginTop={5}
       height="max-content"
     >
       <Heading as="h4" size="md">
@@ -102,11 +102,14 @@ const Feed = (props: Props) => {
       top="5.4rem"
       height="max-content"
     >
-      <Flex width="30%" flexDirection="column">
+      <Flex display="flex" justifyContent="space-between" marginTop={5}>
+        <Heading as="h4" size="md">
+          Search results
+        </Heading>
         <Button
-          backgroundColor="#ACBCFF"
+          backgroundColor="tomato"
           variant="solid"
-          borderRadius={24}
+          borderRadius={5}
           padding={3}
           marginBottom={2}
           onClick={() => {
@@ -116,9 +119,6 @@ const Feed = (props: Props) => {
         >
           Clear Search
         </Button>
-        <Heading as="h4" size="md">
-          Search results
-        </Heading>
       </Flex>
       {searchPosts?.length === 0 ? (
         <Flex
@@ -210,16 +210,9 @@ const Feed = (props: Props) => {
       gap="1rem"
       width="100%"
       position="sticky"
-      top="5.4rem"
+      marginTop={5}
       height="max-content"
     >
-      <Flex gap="1rem" width="100%" flexWrap="wrap" marginTop="0.5em">
-        <Tag>Gaming</Tag>
-        <Tag>Programming</Tag>
-        <Tag>Movies</Tag>
-        <Tag>Music</Tag>
-        <Tag>Anime</Tag>
-      </Flex>
       {pagePosts?.map((post: Posts, index: number) => (
         <Post key={index} posts={post} />
       ))}

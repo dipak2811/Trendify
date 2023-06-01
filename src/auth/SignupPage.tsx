@@ -26,6 +26,7 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [bio, setBio] = useState("");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [error, setError] = useState<string>("");
   const auth: Auth = getAuth(app);
@@ -55,7 +56,7 @@ const SignupPage: React.FC = () => {
       }
       await setDoc(doc(db, "users", user?.uid), {
         username: user?.displayName,
-        bio: "Good Person",
+        bio: bio.trim(),
         uid: user?.uid,
         pfp: user?.photoURL,
         email: user?.email,
@@ -122,6 +123,15 @@ const SignupPage: React.FC = () => {
           placeholder="Enter your username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+        />
+      </FormControl>
+      <FormControl id="bio" mt={4} isRequired>
+        <FormLabel>Bio</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter your bio"
+          value={bio}
+          onChange={(e) => setBio(e.target.value.trimStart())}
         />
       </FormControl>
       <FormControl id="email" mt={4} isRequired>

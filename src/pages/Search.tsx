@@ -1,9 +1,5 @@
-import { Grid, useBreakpointValue } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import Navbar from "../nav/Navbar";
-import RightSidebar from "../nav/RightSidebar";
 import Feed, { Posts } from "../components/Feed";
-import LeftSidebar from "../nav/LeftSidebar";
 import { Params, useParams } from "react-router-dom";
 import {
   collection,
@@ -65,28 +61,11 @@ const Search = () => {
         unsubscribe();
       }
     };
-  }, [caption, db, q]);
-
-  const columnValues = useBreakpointValue({
-    base: "100%",
-    sm: "10% auto 24%",
-    md: "30vw auto",
-    lg: "18vw auto 34vw",
-  });
+  }, [caption, db]);
 
   return (
     <div>
-      <Navbar />
-      <Grid
-        gridTemplateColumns={columnValues}
-        columnGap="2rem"
-        marginLeft="1rem"
-        marginRight="1rem"
-      >
-        <RightSidebar />
-        <Feed />
-        <LeftSidebar />
-      </Grid>
+      <Feed />
     </div>
   );
 };

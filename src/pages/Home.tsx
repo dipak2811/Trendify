@@ -44,7 +44,7 @@ const Home = () => {
     return () => {
       unsubscribe();
     };
-  }, [dispatch]);
+  }, []);
 
   return (
     <div>

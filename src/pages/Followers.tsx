@@ -51,9 +51,7 @@ const Followers = () => {
     return () => {
       unsubscribe();
     };
-  }, [db, auth?.currentUser?.uid, dispatch]);
-
-  console.log("followers", followers);
+  }, [db, auth?.currentUser?.uid]);
 
   return (
     <div>

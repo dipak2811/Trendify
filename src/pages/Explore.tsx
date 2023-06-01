@@ -29,7 +29,6 @@ const Explore = () => {
         id: doc.id,
       }));
       setPosts(newPosts);
-      console.log("from explore");
       dispatch(setExplorePosts(newPosts));
     });
 
@@ -43,14 +42,13 @@ const Explore = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
-    console.log("explore effect");
+
     
     return () => {
       unsubscribe();
     };
   }, []);
 
-  console.log("explore", posts);
 
   if (posts.length === 0) {
     return <Loader />;
