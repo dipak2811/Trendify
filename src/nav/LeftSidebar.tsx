@@ -12,8 +12,6 @@ import {
 import { app } from "../firebase";
 import { getAuth } from "firebase/auth";
 import WhoToFollow from "../components/WhoToFollow";
-import { Follower } from "../pages/Followers";
-
 const LeftSidebar = () => {
   const auth = getAuth();
   const db = getFirestore(app);
@@ -21,9 +19,10 @@ const LeftSidebar = () => {
   const [usersLoading, setUsersLoading] = useState(true);
   const fetchUsers = () => {
     try {
+      const currentUserUid = auth?.currentUser?.uid || "";
       const qUser = query(
         collection(db, "users"),
-        where("uid", "!=", auth?.currentUser?.uid),
+        where("uid", "!=", currentUserUid),
         limit(2)
       );
       const unsubscribe = onSnapshot(qUser, (snapshot) => {
@@ -43,13 +42,11 @@ const LeftSidebar = () => {
     }
   };
   useEffect(() => {
-    setTimeout(() => {
-      fetchUsers();
-    }, 1000);
+    fetchUsers();
   }, [db,auth]);
 
   const [isMobileOrTablet] = useMediaQuery("(max-width: 48em)");
-
+  
   return (
     <Flex
       position={isMobileOrTablet ? "unset" : "sticky"}

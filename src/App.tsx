@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from "react";
+import React, { useRef } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import AuthPrivateRoute from "./routes/AuthPrivateRoute";
 import PrivateRoute from "./routes/PrivateRoute";

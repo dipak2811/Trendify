@@ -18,7 +18,6 @@ const YourPosts = () => {
   const dispatch = useDispatch();
   const db = getFirestore(app);
   const [posts, setPosts] = useState<Posts[]>([]);
-
   useEffect(() => {
     document.title = "Social-App - YourPosts";
     const pageStatus = {
@@ -29,7 +28,6 @@ const YourPosts = () => {
       isProfile: false,
       isFollower: false,
     };
-
     dispatch(setPageStatus(pageStatus));
   }, []);
 

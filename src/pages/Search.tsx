@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
-import Feed, { Posts } from "../components/Feed";
 import { Params, useParams } from "react-router-dom";
 import {
   collection,
   onSnapshot,
   getFirestore,
-  query,
-  where,
   Unsubscribe,
 } from "firebase/firestore";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-import { setPageStatus, setSearchPosts } from "../redux/slice/HomePage";
+import { setPageStatus, setSearchUsers } from "../redux/slice/HomePage";
+import WhoToFollow from "../components/WhoToFollow";
+import { Flex } from "@chakra-ui/react";
+import { getAuth } from "firebase/auth";
+
+export interface IUser {
+  id: string;
+  pfp: string;
+  uid: string;
+  username: string;
+}
 
 const Search = () => {
   const dispatch = useDispatch();
-  const [posts, setPosts] = useState<Posts[]>([]);
+  const auth = getAuth(app);
+  const [users, setUsers] = useState<IUser[]>([]);
   const db = getFirestore(app);
   const { caption }: Readonly<Params<string>> = useParams();
-  const postsRef = collection(db, "posts");
-  const q = query(
-    postsRef,
-    where("caption", ">=", caption),
-    where("caption", "<=", caption + "\uf8ff")
-  );
+  const usersRef = collection(db, "users");
 
   useEffect(() => {
     document.title = "Search results";
@@ -38,34 +41,54 @@ const Search = () => {
     };
 
     dispatch(setPageStatus(pageStatus));
-    dispatch(setSearchPosts(posts));
-  }, [posts]);
+  }, [dispatch]);
 
   useEffect(() => {
     let unsubscribe: Unsubscribe | undefined;
+    const CurrentUser = auth.currentUser;
+    const getUsers = async () => {
+      unsubscribe = onSnapshot(usersRef, (snapshot) => {
+        const filteredUsers: IUser[] = snapshot.docs
+          .map((doc) => ({
+            ...(doc.data() as IUser),
+            id: doc.id,
+          }))
+          .filter((user) => CurrentUser?.uid!==user.uid && user.username.startsWith(caption || ""));
 
-    const getPosts = async () => {
-      unsubscribe = onSnapshot(q, (snapshot) => {
-        const posts: Posts[] = snapshot.docs.map((doc) => ({
-          ...(doc.data() as Posts),
-          id: doc.id,
-        }));
-        setPosts(posts);
+        setUsers(filteredUsers);
+        dispatch(setSearchUsers(filteredUsers));
       });
     };
 
-    getPosts();
+    getUsers();
 
     return () => {
       if (unsubscribe) {
         unsubscribe();
       }
     };
-  }, [caption, db]);
+  }, [caption, db, dispatch]);
+  console.log(users);
 
   return (
     <div>
-      <Feed />
+      <Flex height="max-content" flexDirection="column" gap="1rem" marginTop="2rem">
+        {users.map((user) => (
+          <Flex
+            boxShadow="0 3px 10px rgb(0 0 0 / 0.2)"
+            flexDirection="column"
+            padding="1.5rem"
+            width="100%"
+          >
+            <WhoToFollow
+              key={user.id}
+              userName={user?.username}
+              userId={user?.uid}
+              userPfp={user?.pfp}
+            />
+          </Flex>
+        ))}
+      </Flex>
     </div>
   );
 };

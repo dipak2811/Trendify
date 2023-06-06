@@ -30,23 +30,21 @@ import { ImSearch } from "react-icons/im";
 import { FaUserCircle, FaCamera } from "react-icons/fa";
 import { BiEdit } from "react-icons/bi";
 import { getAuth, signOut, updateProfile } from "firebase/auth";
-// import { useAuth } from "../contexts/AuthContext";
-// import { updateProfile } from "../services/authService";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { IoLogOut } from "react-icons/io5";
 
 const Navbar = () => {
   const [search, setSearch] = useState("");
   const [isMobile] = useMediaQuery("(max-width: 768px)");
-  // const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [newProfilePic, setNewProfilePic] = useState("");
   const [newBio, setNewBio] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [newImageUrl, setNewImageUrl] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
   const [error, setError] = useState("");
   const auth = getAuth(app);
@@ -83,6 +81,7 @@ const Navbar = () => {
   ) => {
     try {
       const user = auth.currentUser;
+      console.log(user);
       if (!user) {
         throw new Error("User not found");
       }
@@ -91,19 +90,16 @@ const Navbar = () => {
       if (!files || files.length === 0) {
         return;
       }
-
       const file = files[0];
-
       const storageRef = ref(
         storage,
         `profile-images/${user.uid}/${file.name}`
       );
       await uploadBytes(storageRef, file);
       const imageUrl = await getDownloadURL(storageRef);
-      await updateProfile(user, { photoURL: imageUrl });
-
+      setNewImageUrl(imageUrl);
       toast({
-        title: "Profile Picture Updated",
+        title: "Profile Picture Selected",
         description: "Your profile picture has been updated successfully",
         status: "success",
         duration: 3000,
@@ -126,20 +122,28 @@ const Navbar = () => {
       inputElement.click();
     }
   };
+  
   const handleProfileUpdate = async () => {
     const user = auth.currentUser;
     setError("");
     setUpdateLoading(true);
-
+    if (!user) {
+      throw new Error("User not found");
+    }
     try {
+      const userDocRef = doc(db, "users", user?.uid);
+      const userDocSnapshot = await getDoc(userDocRef);
+      const userData = userDocSnapshot.data();
+    
       //@ts-ignore
       await setDoc(doc(db, "users", user?.uid), {
         username: user?.displayName,
-        bio: newBio.trim(),
+        bio: (newBio.trim()!=="")? newBio.trim():userData?.bio,
         uid: user?.uid,
-        pfp: user?.photoURL,
-        email: user?.email,
+        pfp: (newImageUrl!=="")? newImageUrl:user?.photoURL,
+        email: (newEmail.trim()!=="")? newEmail.trim():user?.email,
       });
+      await updateProfile(user, { photoURL: (newImageUrl!=="")? newImageUrl:user?.photoURL });
       toast({
         title: "Profile Updated",
         status: "success",
@@ -189,7 +193,7 @@ const Navbar = () => {
             />
             <Input
               type="text"
-              placeholder="Search Post"
+              placeholder="Search User"
               variant="filled"
               onChange={(e) => {
                 setSearch(e.target.value);

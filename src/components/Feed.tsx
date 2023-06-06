@@ -43,7 +43,8 @@ const Feed = (props: Props) => {
   const searchPosts = pageDetail.searchPosts;
   const explorePosts = pageDetail.explorePosts;
   const yourPosts = pageDetail.yourPosts;
-
+  console.log(yourPosts);
+  
   const navigate = useNavigate();
   return pageStatus?.isExplore ? (
     <Flex
@@ -200,7 +201,7 @@ const Feed = (props: Props) => {
           </Tooltip>
         ))}
       </Flex>
-      <Heading as="h4" size="md">
+      <Heading as="h4" size="md" mb={2}>
         Your followers
       </Heading>
     </Flex>

@@ -12,7 +12,6 @@ import {
   Input,
   SkeletonCircle,
   Skeleton,
-  Radio,
   useColorMode,
 } from "@chakra-ui/react";
 import {
@@ -27,8 +26,6 @@ import {
   BsHeartFill,
   BsBookmarkFill,
 } from "react-icons/bs";
-import { MdOutlineReportProblem } from "react-icons/md";
-import { format } from "timeago.js";
 import { app } from "../firebase";
 import { getAuth } from "firebase/auth";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
@@ -249,21 +246,6 @@ const Post = (props: Props) => {
     }
   };
   const [postLoading, setPostLoading] = useState(true);
-  const {
-    isOpen: isReportOpen,
-    onOpen: onReportOpen,
-    onClose: onReportClose,
-  } = useDisclosure();
-  const reportPost = () => {
-    onReportClose();
-    toast({
-      title: "Success",
-      description: "Post reported succesfully",
-      status: "success",
-      duration: 1000,
-      isClosable: true,
-    });
-  };
   function formatCreatedAt(createdAt: any) {
     const milliseconds =
       createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000;
@@ -437,7 +419,7 @@ const Post = (props: Props) => {
           createdAt: props?.posts?.createdAt,
           userId: props?.posts?.userId,
           userName: props?.posts?.userName,
-          userPfp: props?.posts?.userPfp,
+          // userPfp: props?.posts?.userPfp,
         }
       )
         .then(() => {
@@ -470,6 +452,7 @@ const Post = (props: Props) => {
   const { colorMode } = useColorMode();
   const [comment, setComment] = useState("");
   const [commentLoading, setcommentLoading] = useState(false);
+  const [userPfp,setUserPfp]=useState("");
   const Addcomment = async () => {
     setcommentLoading(true);
     await addDoc(
@@ -477,7 +460,6 @@ const Post = (props: Props) => {
       {
         comment: comment,
         userId: auth?.currentUser?.uid,
-        userPfp: auth?.currentUser?.photoURL,
         userName: auth?.currentUser?.displayName,
       }
     )
@@ -516,6 +498,20 @@ const Post = (props: Props) => {
       }
     );
   }, [db, props?.posts?.id]);
+  useEffect(() => {
+    const userPfpRef = doc(db, "users", props?.posts?.userId as string);
+    const unsubscribe = onSnapshot(userPfpRef, (snapshot) => {
+      const userData = snapshot.data();
+      if (userData) {
+        setUserPfp(userData.pfp);
+      }
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, [db, props?.posts?.id]);
+  
   return (
     <Flex
       flexDirection="column"
@@ -533,7 +529,7 @@ const Post = (props: Props) => {
           ) : (
             <Avatar
               cursor="pointer"
-              src={props?.posts?.userPfp}
+              src={userPfp}
               onClick={() => {
                 navigate("/profile/" + props?.posts?.userId);
               }}
@@ -715,54 +711,6 @@ const Post = (props: Props) => {
               {comments?.length}
             </Heading>
           </Flex>
-          <Flex alignItems="center" gap="0.4rem">
-            <IconButton
-              aria-label="Comment"
-              isRound={true}
-              onClick={onReportOpen}
-            >
-              {postLoading ? (
-                <SkeletonCircle />
-              ) : (
-                <MdOutlineReportProblem size="1.5rem" cursor="pointer" />
-              )}
-            </IconButton>
-          </Flex>
-          <Modal isOpen={isReportOpen} onClose={onReportClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Report Post</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Flex flexDirection="column" gap="1rem">
-                  <Radio colorScheme="red" value="1">
-                    Spam
-                  </Radio>
-                  <Radio colorScheme="green" value="2" defaultChecked disabled>
-                    Hate speech or symbols
-                  </Radio>
-                  <Radio colorScheme="red" value="1">
-                    Violence or dangerous organisations
-                  </Radio>
-                  <Radio colorScheme="red" value="1">
-                    Bullying or harassment
-                  </Radio>
-                  <Radio colorScheme="red" value="1">
-                    Selling illegal or regulated goods
-                  </Radio>
-                  <Radio colorScheme="red" value="1">
-                    Intellectual property violations
-                  </Radio>
-                </Flex>
-              </ModalBody>
-              <ModalFooter>
-                <Button mr={3} onClick={onReportClose}>
-                  Close
-                </Button>
-                <Button onClick={reportPost}>Report</Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
         </Flex>
         <IconButton aria-label="Comment" isRound={true} onClick={savePost}>
           {postLoading ? (

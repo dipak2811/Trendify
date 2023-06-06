@@ -58,7 +58,6 @@ const CreateComponent = () => {
         createdAt: serverTimestamp(),
         userId: auth?.currentUser?.uid,
         userName: auth?.currentUser?.displayName,
-        userPfp: auth?.currentUser?.photoURL,
       });
 
       toast({
