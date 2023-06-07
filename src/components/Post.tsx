@@ -620,6 +620,7 @@ const Post = (props: Props) => {
         onLoad={() => {
           setPostLoading(false);
         }}
+        aspectRatio="16/9"
       />
       {postLoading ? (
         <Skeleton height="1rem" width="24rem" />

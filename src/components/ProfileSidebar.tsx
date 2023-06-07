@@ -257,30 +257,6 @@ const ProfileSidebar = (props: Props) => {
               />
               Copy to clipboard
             </MenuItem>
-            <MenuItem gap="0.5rem">
-              <RedditShareButton url={SHARE_URL}>
-                <RedditIcon size={32} round />
-              </RedditShareButton>
-              Reddit
-            </MenuItem>
-            <MenuItem gap="0.5rem">
-              <FacebookShareButton url={SHARE_URL}>
-                <FacebookIcon size={32} round />
-              </FacebookShareButton>
-              Facebook
-            </MenuItem>
-            <MenuItem gap="0.5rem">
-              <WhatsappShareButton url={SHARE_URL}>
-                <WhatsappIcon size={32} round />
-              </WhatsappShareButton>
-              Whatsapp
-            </MenuItem>
-            <MenuItem gap="0.5rem">
-              <TwitterShareButton url={SHARE_URL}>
-                <TwitterIcon size={32} round />
-              </TwitterShareButton>
-              Twitter
-            </MenuItem>
           </MenuList>
         </Menu>
       </Flex>
