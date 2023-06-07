@@ -12,7 +12,7 @@ import {
   Input,
   SkeletonCircle,
   Skeleton,
-  useColorMode,
+  Icon,
 } from "@chakra-ui/react";
 import {
   BiDotsVerticalRounded,
@@ -45,8 +45,6 @@ import {
   collection,
   onSnapshot,
   getDoc,
-  addDoc,
-  DocumentData,
   updateDoc,
   QuerySnapshot,
   QueryDocumentSnapshot,
@@ -70,12 +68,12 @@ import { useNavigate } from "react-router-dom";
 import {
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
+import CommentSection from "./CommentSection";
 
 type Props = {
   posts?: {
@@ -106,6 +104,7 @@ const Post = (props: Props) => {
   const db = getFirestore(app);
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+  const [commentsLength, setCommentsLenght] = useState(0);
   const deletePost = async () => {
     setLoading(true);
     await deleteDoc(doc(db, "posts", props?.posts?.id as string))
@@ -133,24 +132,17 @@ const Post = (props: Props) => {
       });
   };
   const [caption, setCaption] = useState(props?.posts?.caption as string);
-  const [image, setImage] = useState(props?.posts?.image);
+  const [image, setImage] = useState<any>(props?.posts?.image);
   const [imageUrl, setImageUrl] = useState("");
   const storage = getStorage(app);
   const navigate = useNavigate();
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageUrl = reader.result as string;
-        setImageUrl(imageUrl);
-        setImage(imageUrl);
-      };
-      reader.readAsDataURL(file);
+      setImageUrl(URL.createObjectURL(file));
+      setImage(file);
     }
   };
-
   const [updateLoading, setUpdateLoading] = useState(false);
   const updatePost = async () => {
     setUpdateLoading(true);
@@ -184,7 +176,7 @@ const Post = (props: Props) => {
           onEditClose();
         });
     } else {
-      const storageRef = ref(storage, `/images/${Date.now()}`);
+      const storageRef = ref(storage, `/images/${image.name + Date.now()}`);
       //@ts-ignore
       const uploadTask = uploadBytesResumable(storageRef, image);
       uploadTask.on(
@@ -443,61 +435,7 @@ const Post = (props: Props) => {
         });
     }
   };
-  type CommentType = {
-    comment: string;
-    userName: string;
-    userPfp: string;
-    userId: string;
-  };
-  const { colorMode } = useColorMode();
-  const [comment, setComment] = useState("");
-  const [commentLoading, setcommentLoading] = useState(false);
-  const [userPfp,setUserPfp]=useState("");
-  const Addcomment = async () => {
-    setcommentLoading(true);
-    await addDoc(
-      collection(db, "posts", props?.posts?.id as string, "comments"),
-      {
-        comment: comment,
-        userId: auth?.currentUser?.uid,
-        userName: auth?.currentUser?.displayName,
-      }
-    )
-      .then(() => {
-        setcommentLoading(false);
-        setComment("");
-        toast({
-          title: "Success",
-          description: "Comment added succesfully",
-          status: "success",
-          duration: 250,
-          isClosable: true,
-        });
-      })
-      .catch((err) => {
-        setcommentLoading(false);
-        toast({
-          title: "Error",
-          description: err?.message,
-          status: "error",
-          duration: 250,
-          isClosable: true,
-        });
-      });
-  };
-  const [comments, setComments] = useState<DocumentData | undefined>(undefined);
-  useEffect(() => {
-    onSnapshot(
-      collection(db, "posts", props?.posts?.id as string, "comments"),
-      (snapshot) => {
-        const updatedComments = snapshot?.docs?.map((doc) => ({
-          id: doc?.id,
-          ...doc?.data(),
-        }));
-        setComments(updatedComments);
-      }
-    );
-  }, [db, props?.posts?.id]);
+  const [userPfp, setUserPfp] = useState("");
   useEffect(() => {
     const userPfpRef = doc(db, "users", props?.posts?.userId as string);
     const unsubscribe = onSnapshot(userPfpRef, (snapshot) => {
@@ -506,12 +444,23 @@ const Post = (props: Props) => {
         setUserPfp(userData.pfp);
       }
     });
-  
+    const unsubscribeComments = onSnapshot(
+      collection(db, "posts", props?.posts?.id as string, "comments"),
+      (snapshot) => {
+        const updatedComments = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCommentsLenght(updatedComments.length);
+      }
+    );
     return () => {
       unsubscribe();
+      unsubscribeComments();
     };
   }, [db, props?.posts?.id]);
-  
+  console.log(commentsLength);
+
   return (
     <Flex
       flexDirection="column"
@@ -686,7 +635,12 @@ const Post = (props: Props) => {
               {postLoading ? (
                 <SkeletonCircle />
               ) : liked ? (
-                <BsHeartFill size="1.5rem" cursor="pointer" />
+                <Icon
+                  as={BsHeartFill}
+                  boxSize={6}
+                  cursor="pointer"
+                  color="red.600"
+                />
               ) : (
                 <BsHeart size="1.5rem" cursor="pointer" />
               )}
@@ -708,7 +662,7 @@ const Post = (props: Props) => {
               )}
             </IconButton>
             <Heading as="h5" size="sm" color="gray.600">
-              {comments?.length}
+              {commentsLength}
             </Heading>
           </Flex>
         </Flex>
@@ -750,54 +704,8 @@ const Post = (props: Props) => {
           <DrawerCloseButton />
           <DrawerHeader>Comments</DrawerHeader>
           <DrawerBody>
-            {comments?.map((comment: CommentType) => (
-              <Flex
-                width="100%"
-                gap="0.6rem"
-                cursor="pointer"
-                _hover={{
-                  backgroundColor:
-                    colorMode === "light" ? "#efefef" : "#20242a",
-                }}
-                padding="1rem"
-                onClick={() => {
-                  navigate("/profile/" + comment?.userId);
-                }}
-              >
-                <Avatar src={comment?.userPfp} />
-                <Flex flexDirection="column" gap="0.6rem" alignItems="start">
-                  <Heading as="h5" size="md">
-                    {comment?.userName}
-                  </Heading>
-                  <Heading as="h5" size="sm" color="gray.400">
-                    {comment?.comment}
-                  </Heading>
-                </Flex>
-              </Flex>
-            ))}
+            <CommentSection postId={props?.posts?.id} />
           </DrawerBody>
-          <DrawerFooter gap="1rem" alignItems="center">
-            <Tooltip label={auth?.currentUser?.displayName} openDelay={200}>
-              <Avatar
-                src={auth?.currentUser?.photoURL as string | undefined}
-                cursor="pointer"
-              />
-            </Tooltip>
-            <Input
-              placeholder="Type here..."
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setComment(e?.target?.value);
-              }}
-              value={comment}
-            />
-            {comment?.length > 0 && comment?.length <= 100 ? (
-              <Button onClick={Addcomment}>Send</Button>
-            ) : (
-              <Button disabled isLoading={commentLoading}>
-                Send
-              </Button>
-            )}
-          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </Flex>

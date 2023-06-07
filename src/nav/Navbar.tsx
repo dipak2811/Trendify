@@ -121,8 +121,7 @@ const Navbar = () => {
     if (inputElement) {
       inputElement.click();
     }
-  };
-  
+  }
   const handleProfileUpdate = async () => {
     const user = auth.currentUser;
     setError("");
@@ -134,8 +133,6 @@ const Navbar = () => {
       const userDocRef = doc(db, "users", user?.uid);
       const userDocSnapshot = await getDoc(userDocRef);
       const userData = userDocSnapshot.data();
-    
-      //@ts-ignore
       await setDoc(doc(db, "users", user?.uid), {
         username: user?.displayName,
         bio: (newBio.trim()!=="")? newBio.trim():userData?.bio,
