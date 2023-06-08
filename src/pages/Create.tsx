@@ -7,7 +7,7 @@ const Create = () => {
   }, []);
   return (
     <div>
-        <CreateComponent />
+      <CreateComponent />
     </div>
   );
 };

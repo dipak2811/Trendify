@@ -34,7 +34,8 @@ function App() {
   let showNav: boolean = false;
   if (
     urlDetails.pathname.includes("/login") ||
-    urlDetails.pathname.includes("/signup")
+    urlDetails.pathname.includes("/signup") ||
+    urlDetails.pathname.includes("/profile")
   )
     showNav = true;
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -49,7 +50,6 @@ function App() {
     <>
       {showNav ? null : <Navbar />}
       <Grid
-        
         gridTemplateColumns={showNav ? "100%" : columnValues}
         columnGap="2rem"
         marginLeft="1rem"

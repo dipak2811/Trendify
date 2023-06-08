@@ -459,7 +459,6 @@ const Post = (props: Props) => {
       unsubscribeComments();
     };
   }, [db, props?.posts?.id]);
-  console.log(commentsLength);
 
   return (
     <Flex

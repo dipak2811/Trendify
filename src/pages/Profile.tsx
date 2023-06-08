@@ -4,6 +4,8 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
+  Grid,
+  useBreakpointValue,
   useDisclosure,
   useMediaQuery,
   useToast,
@@ -25,7 +27,9 @@ import {
 import { app } from "../firebase";
 import Loader from "../components/Loader";
 import { useDispatch } from "react-redux";
-import { setPageStatus } from "../redux/slice/HomePage";
+import { setPageStatus, setProfilePosts } from "../redux/slice/HomePage";
+import Navbar from "../nav/Navbar";
+import RightSidebar from "../nav/RightSidebar";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -39,8 +43,8 @@ const Profile = () => {
       isLibrary: false,
       isYourPosts: false,
       isSearch: false,
-      isProfile: false,
-      isFollower: true,
+      isProfile: true,
+      isFollower: false,
     };
 
     dispatch(setPageStatus(pageStatus));
@@ -78,9 +82,15 @@ const Profile = () => {
         id: doc.id,
       }));
       setPosts(posts);
+      dispatch(setProfilePosts(posts));
     });
   };
-
+  const columnValues = useBreakpointValue({
+    base: "100%",
+    sm: "10% auto 24%",
+    md: "30vw auto",
+    lg: "18vw auto 34vw",
+  });
   useEffect(() => {
     getPosts();
   }, [uuid, db]);
@@ -88,69 +98,78 @@ const Profile = () => {
     return <Loader />;
   }
   return (
-    <div>
-      <Feed username={profile?.username} profilePosts={posts} />
-      {isMobileView ? (
-        <>
-          <Button
-            pos={"absolute"}
-            right="0"
-            top={"7rem"}
-            zIndex="100"
-            ref={btnRef}
-            colorScheme="teal"
-            onClick={onOpen}
-            padding={0}
-            background="#D6BCFA"
-          > 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="m-0 p-0"
-              width="100%"
-              height="100%"
+    <>
+      <Navbar />
+      <Grid
+        gridTemplateColumns={columnValues}
+        columnGap="2rem"
+        marginLeft="1rem"
+        marginRight="1rem"
+      >
+        <RightSidebar />
+        <Feed />
+        {isMobileView ? (
+          <>
+            <Button
+              pos={"absolute"}
+              right="0"
+              top={"7rem"}
+              zIndex="100"
+              ref={btnRef}
+              colorScheme="teal"
+              onClick={onOpen}
+              padding={0}
+              background="#D6BCFA"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
-              />
-            </svg>
-          </Button>
-          <Drawer
-            isOpen={isOpen}
-            placement="right"
-            onClose={onClose}
-            finalFocusRef={btnRef}
-          >
-            <DrawerOverlay />
-            <DrawerContent>
-              <DrawerCloseButton />
-              <ProfileSidebar
-                username={profile?.username}
-                bio={profile?.bio}
-                createdAt={profile?.createdAt}
-                pfp={profile?.pfp}
-                uid={profile?.uid}
-                postsLength={posts?.length}
-              />
-            </DrawerContent>
-          </Drawer>
-        </>
-      ) : (
-        <ProfileSidebar
-          username={profile?.username}
-          bio={profile?.bio}
-          createdAt={profile?.createdAt}
-          pfp={profile?.pfp}
-          uid={profile?.uid}
-          postsLength={posts?.length}
-        />
-      )}
-    </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="m-0 p-0"
+                width="100%"
+                height="100%"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
+                />
+              </svg>
+            </Button>
+            <Drawer
+              isOpen={isOpen}
+              placement="right"
+              onClose={onClose}
+              finalFocusRef={btnRef}
+            >
+              <DrawerOverlay />
+              <DrawerContent>
+                <DrawerCloseButton />
+                <ProfileSidebar
+                  username={profile?.username}
+                  bio={profile?.bio}
+                  createdAt={profile?.createdAt}
+                  pfp={profile?.pfp}
+                  uid={profile?.uid}
+                  postsLength={posts?.length}
+                />
+              </DrawerContent>
+            </Drawer>
+          </>
+        ) : (
+          <ProfileSidebar
+            username={profile?.username}
+            bio={profile?.bio}
+            createdAt={profile?.createdAt}
+            pfp={profile?.pfp}
+            uid={profile?.uid}
+            postsLength={posts?.length}
+          />
+        )}
+      </Grid>
+    </>
   );
 };
 

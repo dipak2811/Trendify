@@ -14,7 +14,6 @@ import { Posts } from "../components/Feed";
 const Home = () => {
   const dispatch = useDispatch();
 
-  
   useEffect(() => {
     document.title = "Trendify";
 
@@ -23,7 +22,7 @@ const Home = () => {
     const q = query(postsRef, orderBy("createdAt", "desc"));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const posts:Posts[] = snapshot.docs.map((doc) => ({
+      const posts: Posts[] = snapshot.docs.map((doc) => ({
         ...(doc.data() as Posts),
         id: doc.id,
       }));

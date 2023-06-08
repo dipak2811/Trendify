@@ -43,12 +43,10 @@ const Explore = () => {
 
     dispatch(setPageStatus(pageStatus));
 
-    
     return () => {
       unsubscribe();
     };
   }, []);
-
 
   if (posts.length === 0) {
     return <Loader />;

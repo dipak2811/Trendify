@@ -3,13 +3,12 @@ import { Posts } from "../../components/Feed";
 import { Follower } from "../../pages/Followers";
 import { IUser } from "../../pages/Search";
 
-interface HomePageState {
+export interface HomePageState {
   posts: Posts[];
   libraryPosts: Posts[];
   explorePosts: Posts[];
   yourPosts: Posts[];
-  searchPosts: Posts[];
-  searchUsers: IUser[]; // Add the searchUsers state
+  searchUsers: IUser[];
   followersData: Follower[];
   pageStatus: {
     isExplore: boolean;
@@ -19,6 +18,7 @@ interface HomePageState {
     isProfile: boolean;
     isFollower: boolean;
   };
+  profilePosts: Posts[];
 }
 
 const initialState: HomePageState = {
@@ -26,8 +26,7 @@ const initialState: HomePageState = {
   libraryPosts: [],
   explorePosts: [],
   yourPosts: [],
-  searchPosts: [],
-  searchUsers: [], // Initialize searchUsers state as an empty array
+  searchUsers: [],
   followersData: [],
   pageStatus: {
     isExplore: false,
@@ -37,6 +36,7 @@ const initialState: HomePageState = {
     isProfile: false,
     isFollower: false,
   },
+  profilePosts: [],
 };
 
 const homePageSlice = createSlice({
@@ -55,9 +55,6 @@ const homePageSlice = createSlice({
     setYourPosts: (state, action: PayloadAction<Posts[]>) => {
       state.yourPosts = action.payload;
     },
-    setSearchPosts: (state, action: PayloadAction<Posts[]>) => {
-      state.searchPosts = action.payload;
-    },
     setSearchUsers: (state, action: PayloadAction<IUser[]>) => {
       state.searchUsers = action.payload;
     },
@@ -70,6 +67,9 @@ const homePageSlice = createSlice({
     ) => {
       state.pageStatus = action.payload;
     },
+    setProfilePosts: (state, action: PayloadAction<Posts[]>) => {
+      state.profilePosts = action.payload;
+    },
   },
 });
 
@@ -79,8 +79,8 @@ export const {
   setLibraryPosts,
   setExplorePosts,
   setYourPosts,
-  setSearchPosts,
-  setSearchUsers, // Add setSearchUsers to the exported actions
+  setSearchUsers,
+  setProfilePosts,
   setFollowersData,
 } = homePageSlice.actions;
 

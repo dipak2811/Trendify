@@ -22,18 +22,7 @@ export type Posts = {
   id: string;
 };
 
-type Props = {
-  username?: string;
-  homePosts?: Array<Posts>;
-  explorePosts?: Array<Posts>;
-  yourPosts?: Array<Posts>;
-  searchPosts?: Array<Posts>;
-  libraryPosts?: Array<Posts>;
-  profilePosts?: Array<Posts>;
-  followersData?: any;
-};
-
-const Feed = (props: Props) => {
+const Feed = () => {
   const pageDetail = useSelector((state: any) => state.pageStatus);
   const pageStatus = pageDetail.pageStatus;
   const pagePosts = pageDetail.posts;
@@ -43,8 +32,6 @@ const Feed = (props: Props) => {
   const searchPosts = pageDetail.searchPosts;
   const explorePosts = pageDetail.explorePosts;
   const yourPosts = pageDetail.yourPosts;
-  console.log(yourPosts);
-  
   const navigate = useNavigate();
   return pageStatus?.isExplore ? (
     <Flex
@@ -153,11 +140,9 @@ const Feed = (props: Props) => {
       width="100%"
       position="sticky"
       top="5.4rem"
+      marginTop="2rem"
       height="max-content"
     >
-      <Heading as="h4" size="md">
-        {props?.username} posts
-      </Heading>
       {profilePosts.length === 0 ? (
         <Flex
           width="100%"

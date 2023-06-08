@@ -81,7 +81,6 @@ const Navbar = () => {
   ) => {
     try {
       const user = auth.currentUser;
-      console.log(user);
       if (!user) {
         throw new Error("User not found");
       }

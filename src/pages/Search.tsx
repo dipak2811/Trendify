@@ -53,7 +53,11 @@ const Search = () => {
             ...(doc.data() as IUser),
             id: doc.id,
           }))
-          .filter((user) => CurrentUser?.uid!==user.uid && user.username.startsWith(caption || ""));
+          .filter(
+            (user) =>
+              CurrentUser?.uid !== user.uid &&
+              user.username.startsWith(caption || "")
+          );
 
         setUsers(filteredUsers);
         dispatch(setSearchUsers(filteredUsers));
@@ -68,11 +72,15 @@ const Search = () => {
       }
     };
   }, [caption, db, dispatch]);
-  console.log(users);
 
   return (
     <div>
-      <Flex height="max-content" flexDirection="column" gap="1rem" marginTop="2rem">
+      <Flex
+        height="max-content"
+        flexDirection="column"
+        gap="1rem"
+        marginTop="2rem"
+      >
         {users.map((user) => (
           <Flex
             boxShadow="0 3px 10px rgb(0 0 0 / 0.2)"

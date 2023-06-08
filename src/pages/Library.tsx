@@ -16,7 +16,7 @@ const Library = () => {
   const dispatch = useDispatch();
   const auth = getAuth(app);
   const db = getFirestore(app);
-  
+
   useEffect(() => {
     document.title = "Library";
     const pageStatus = {
@@ -39,9 +39,9 @@ const Library = () => {
     auth?.currentUser?.uid as string,
     "savedposts"
   );
-  
+
   const q = query(postsRef, orderBy("createdAt", "desc"));
-  
+
   const getPosts = async () => {
     onSnapshot(q, (snapshot) => {
       const posts: Posts[] = snapshot?.docs?.map((doc) => ({
@@ -52,8 +52,7 @@ const Library = () => {
       dispatch(setLibraryPosts(posts));
     });
   };
-  
-  
+
   useEffect(() => {
     getPosts();
   }, [db, auth?.currentUser?.uid]);

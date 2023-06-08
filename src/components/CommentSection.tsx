@@ -47,7 +47,7 @@ const CommentSection = ({ postId }: any) => {
         const updatedComments = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })); 
+        }));
         setComments(updatedComments);
       }
     );
