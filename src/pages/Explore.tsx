@@ -8,6 +8,7 @@ import {
   query,
   limit,
   Unsubscribe,
+  orderBy,
 } from "firebase/firestore";
 import { app } from "../firebase";
 import Loader from "../components/Loader";
@@ -18,7 +19,7 @@ const Explore = () => {
   const [posts, setPosts] = useState<Posts[]>([]);
   const db = getFirestore(app);
   const postsRef = collection(db, "posts");
-  const q = query(postsRef, limit(5));
+  const q = query(postsRef, limit(5), orderBy("createdAt", "desc"));
 
   useEffect(() => {
     document.title = "Explore";

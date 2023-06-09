@@ -6,7 +6,7 @@ import {
   onSnapshot,
   getFirestore,
   query,
-  where,
+  where
 } from "firebase/firestore";
 import { app } from "../firebase";
 import { setPageStatus, setPosts } from "../redux/slice/HomePage";
@@ -19,7 +19,7 @@ const Home = () => {
   const [followers, setFollowers] = useState<Follower[]>([]);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  const getFollowersPosts = (userId:string)=>{
+  const getFollowersPosts = (userId: string) => {
     const postsRef = collection(db, "posts");
     const q = query(postsRef, where("userId", "==", userId));
     const getPosts = () => {
@@ -28,16 +28,25 @@ const Home = () => {
           ...(doc.data() as Posts),
           id: doc.id,
         }));
-        setFollowersPosts([...followersposts,...newPosts]);
-          dispatch(setPosts([...followersposts,...newPosts]));
+        setFollowersPosts((prev) => [...prev, ...newPosts]);
       });
     };
     getPosts();
-  }
-
+  };
+useEffect(()=>{
+  followersposts.sort((a, b) => {
+    //@ts-ignore
+    const dateA = new Date(a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000);
+    //@ts-ignore
+    const dateB = new Date(b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000);
+    //@ts-ignore
+    return dateB - dateA;
+  });
+  dispatch(setPosts(followersposts))
+},[followersposts])
   useEffect(() => {
-    followers.forEach(element => {
-      getFollowersPosts(element.id)
+    followers.forEach((element) => {
+      getFollowersPosts(element.id);
     });
   }, [followers]);
   useEffect(() => {
@@ -50,9 +59,7 @@ const Home = () => {
       isProfile: false,
       isFollower: false,
     };
-
     dispatch(setPageStatus(pageStatus));
-
     const userRef = collection(
       db,
       "users",
@@ -62,7 +69,7 @@ const Home = () => {
 
     const unsubscribe = onSnapshot(userRef, (snapshot) => {
       const followers = snapshot.docs.map((doc) => ({
-        id: doc.id
+        id: doc.id,
       })) as Follower[];
       setFollowers(followers);
     });
@@ -71,8 +78,8 @@ const Home = () => {
       unsubscribe();
     };
   }, [db, auth?.currentUser?.uid]);
-  console.log(followersposts,"Home");
-  
+  console.log(followersposts, "Home");
+
   return (
     <div>
       <Feed />

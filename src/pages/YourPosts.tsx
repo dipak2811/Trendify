@@ -61,6 +61,14 @@ const YourPosts = () => {
   }, [auth?.currentUser?.uid, db]);
 
   useEffect(() => {
+    posts.sort((a, b) => {
+      //@ts-ignore
+      const dateA = new Date(a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000);
+      //@ts-ignore
+      const dateB = new Date(b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000);
+      //@ts-ignore
+      return dateB - dateA;
+    });
     dispatch(setYourPosts(posts));
   }, [posts]);
 

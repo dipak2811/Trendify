@@ -23,6 +23,7 @@ import {
   query,
   onSnapshot,
   where,
+  orderBy,
 } from "firebase/firestore";
 import { app } from "../firebase";
 import Loader from "../components/Loader";
@@ -74,7 +75,11 @@ const Profile = () => {
   const btnRef = useRef<HTMLButtonElement>(null);
   const [isMobileView] = useMediaQuery("(max-width: 48em)");
   const postsRef = collection(db, "posts");
-  const q = query(postsRef, where("userId", "==", uuid));
+  const q = query(
+    postsRef,
+    where("userId", "==", uuid),
+    orderBy("createdAt", "desc")
+  );
   const getPosts = () => {
     onSnapshot(q, (snapshot) => {
       const posts = snapshot?.docs?.map((doc) => ({
