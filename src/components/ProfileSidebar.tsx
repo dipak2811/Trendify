@@ -8,21 +8,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { MdShare, MdContentCopy } from "react-icons/md";
-import { format } from "timeago.js";
 import { RiUserFollowFill, RiUserUnfollowFill } from "react-icons/ri";
 import { getAuth } from "firebase/auth";
 import { app } from "../firebase";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
-import {
-  RedditShareButton,
-  RedditIcon,
-  FacebookIcon,
-  FacebookShareButton,
-  WhatsappShareButton,
-  WhatsappIcon,
-  TwitterShareButton,
-  TwitterIcon,
-} from "react-share";
 import {
   doc,
   getDoc,

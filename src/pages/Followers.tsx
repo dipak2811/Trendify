@@ -17,7 +17,6 @@ const Followers = () => {
   const dispatch = useDispatch();
   const db = getFirestore(app);
   const auth = getAuth(app);
-  const [followers, setFollowers] = useState<Follower[]>([]);
 
   useEffect(() => {
     document.title = "Followers";
@@ -44,8 +43,7 @@ const Followers = () => {
         id: doc.id,
         ...doc.data(),
       })) as Follower[];
-      setFollowers(followers);
-      dispatch(setFollowersData(followers));
+      dispatch(setFollowersData(followers));             
     });
 
     return () => {
