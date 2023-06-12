@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Avatar,
-  Flex,
-  Heading,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Avatar, Flex, Heading, Tooltip } from "@chakra-ui/react";
 import Post from "./Post";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -24,10 +19,10 @@ export type Posts = {
 };
 
 interface State {
-  pageDetails:HomePageState
+  pageDetails: HomePageState;
 }
 const Feed = () => {
-  const pageDetail = useSelector((state:State) => state);
+  const pageDetail = useSelector((state: State) => state);
   const allData = pageDetail.pageDetails;
   const pageStatus = allData?.pageStatus;
   const pagePosts = allData?.posts;
@@ -36,8 +31,7 @@ const Feed = () => {
   const followersData = allData?.followersData;
   const explorePosts = allData?.explorePosts;
   const yourPosts = allData?.yourPosts;
-  console.log(pageDetail.pageDetails);
-  
+
   const navigate = useNavigate();
   return pageStatus?.isExplore ? (
     <Flex

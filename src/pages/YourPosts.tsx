@@ -55,20 +55,24 @@ const YourPosts = () => {
 
     return () => {
       if (unsubscribe) {
-        unsubscribe();                  
+        unsubscribe();
       }
     };
   }, [auth?.currentUser?.uid, db]);
 
   useEffect(() => {
     posts.sort((a, b) => {
-      const dateA = new Date(a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000);
-      const dateB = new Date(b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000);
+      const dateA = new Date(
+        a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000
+      );
+      const dateB = new Date(
+        b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000
+      );
       return dateB.getTime() - dateA.getTime();
     });
     dispatch(setYourPosts(posts));
   }, [posts]);
-  
+
   return (
     <div>
       <Feed />

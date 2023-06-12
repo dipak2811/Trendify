@@ -12,7 +12,7 @@ type PrivateRouteProps = {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const auth = getAuth(app);
   const [user, loading, error] = useAuthState(auth);
-  
+
   return loading ? (
     <Loader />
   ) : user ? (

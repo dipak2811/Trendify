@@ -40,7 +40,6 @@ const Navbar = () => {
   const [search, setSearch] = useState("");
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const [isOpen, setIsOpen] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
   const [newProfilePic, setNewProfilePic] = useState("");
   const [newBio, setNewBio] = useState("");
   const [newEmail, setNewEmail] = useState("");
@@ -55,7 +54,6 @@ const Navbar = () => {
 
   const onClose = () => {
     setIsOpen(false);
-    setNewPassword("");
     setNewProfilePic("");
     setNewBio("");
     setNewEmail("");
@@ -120,7 +118,7 @@ const Navbar = () => {
     if (inputElement) {
       inputElement.click();
     }
-  }
+  };
   const handleProfileUpdate = async () => {
     const user = auth.currentUser;
     setError("");
@@ -134,12 +132,14 @@ const Navbar = () => {
       const userData = userDocSnapshot.data();
       await setDoc(doc(db, "users", user?.uid), {
         username: user?.displayName,
-        bio: (newBio.trim()!=="")? newBio.trim():userData?.bio,
+        bio: newBio.trim() !== "" ? newBio.trim() : userData?.bio,
         uid: user?.uid,
-        pfp: (newImageUrl!=="")? newImageUrl:user?.photoURL,
-        email: (newEmail.trim()!=="")? newEmail.trim():user?.email,
+        pfp: newImageUrl !== "" ? newImageUrl : user?.photoURL,
+        email: newEmail.trim() !== "" ? newEmail.trim() : user?.email,
       });
-      await updateProfile(user, { photoURL: (newImageUrl!=="")? newImageUrl:user?.photoURL });
+      await updateProfile(user, {
+        photoURL: newImageUrl !== "" ? newImageUrl : user?.photoURL,
+      });
       toast({
         title: "Profile Updated",
         status: "success",
@@ -288,18 +288,6 @@ const Navbar = () => {
                 placeholder="Email Address"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-              />
-            </InputGroup>
-            <InputGroup size="sm" mb={4}>
-              <InputLeftElement
-                pointerEvents="none"
-                children={<BiEdit color="gray.300" />}
-              />
-              <Input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
               />
             </InputGroup>
           </ModalBody>

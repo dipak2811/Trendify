@@ -22,6 +22,7 @@ import {
   deleteDoc,
   setDoc,
 } from "firebase/firestore";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   username: string;
@@ -36,7 +37,8 @@ const ProfileSidebar = (props: Props) => {
   const db = getFirestore(app);
   const auth = getAuth(app);
   const toast = useToast();
-  const SHARE_URL = "http://localhost:3000/profile/" + props.uid;
+  const location = useLocation();
+  const SHARE_URL = "http://localhost:3000/" + location.pathname;
   const copyClipboard = () => {
     navigator.clipboard.writeText(SHARE_URL);
     toast({

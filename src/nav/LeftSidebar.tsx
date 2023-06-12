@@ -43,10 +43,10 @@ const LeftSidebar = () => {
   };
   useEffect(() => {
     fetchUsers();
-  }, [db,auth]);
+  }, [db, auth]);
 
   const [isMobileOrTablet] = useMediaQuery("(max-width: 48em)");
-  
+
   return (
     <Flex
       position={isMobileOrTablet ? "unset" : "sticky"}
@@ -63,18 +63,7 @@ const LeftSidebar = () => {
       >
         <Flex width="80%" flexDirection="column" gap="0.6rem">
           <Heading as="h4" size="lg">
-            Who to follow
-          </Heading>
-          <Heading
-            as="h4"
-            size="md"
-            color="blue.200"
-            cursor="pointer"
-            _hover={{
-              textDecorationLine: "underline",
-            }}
-          >
-            View more
+            Suggestions
           </Heading>
           <Divider />
         </Flex>

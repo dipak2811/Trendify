@@ -29,7 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 interface Comment {
-  id: string
+  id: string;
   comment: string;
   userId: string;
   userName: string;
@@ -67,8 +67,7 @@ const CommentSection = ({ postId }: Props) => {
       unsubscribe();
     };
   }, [postId]);
-  console.log(comments);
-  
+
   const handleAddComment = async () => {
     if (comment.length > 0 && comment.length <= 100) {
       await addDoc(collection(db, "posts", postId, "comments"), {

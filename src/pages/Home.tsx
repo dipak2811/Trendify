@@ -6,7 +6,7 @@ import {
   onSnapshot,
   getFirestore,
   query,
-  where
+  where,
 } from "firebase/firestore";
 import { app } from "../firebase";
 import { setPageStatus, setPosts } from "../redux/slice/HomePage";
@@ -33,14 +33,18 @@ const Home = () => {
     };
     getPosts();
   };
-useEffect(()=>{
-  followersposts.sort((a, b) => {
-    const dateA = new Date(a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000);
-    const dateB = new Date(b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000);
-    return dateB.getTime() - dateA.getTime();
-  });
-  dispatch(setPosts(followersposts))
-},[followersposts])
+  useEffect(() => {
+    followersposts.sort((a, b) => {
+      const dateA = new Date(
+        a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000
+      );
+      const dateB = new Date(
+        b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000
+      );
+      return dateB.getTime() - dateA.getTime();
+    });
+    dispatch(setPosts(followersposts));
+  }, [followersposts]);
   useEffect(() => {
     followers.forEach((element) => {
       getFollowersPosts(element.id);
@@ -74,7 +78,6 @@ useEffect(()=>{
       unsubscribe();
     };
   }, [db, auth?.currentUser?.uid]);
-  console.log(followersposts, "Home");
 
   return (
     <div>

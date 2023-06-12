@@ -42,7 +42,7 @@ const Followers = () => {
         id: doc.id,
         ...doc.data(),
       })) as Follower[];
-      dispatch(setFollowersData(followers));             
+      dispatch(setFollowersData(followers));
     });
 
     return () => {

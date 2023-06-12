@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-import { setPageStatus, setSearchUsers } from "../redux/slice/HomePage";
+import { setSearchUsers } from "../redux/slice/HomePage";
 import WhoToFollow from "../components/WhoToFollow";
 import { Flex } from "@chakra-ui/react";
 import { getAuth } from "firebase/auth";

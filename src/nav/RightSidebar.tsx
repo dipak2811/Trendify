@@ -39,7 +39,7 @@ const RightSidebar = () => {
             gap="1rem"
             borderTopRightRadius="1rem"
             borderTopLeftRadius="1rem"
-            backgroundColor= "#cfcfcf57"
+            backgroundColor="#cfcfcf57"
             onClick={() => {
               navigate("/");
             }}
@@ -88,7 +88,7 @@ const RightSidebar = () => {
             height="4rem"
             transition="all 300ms ease"
             gap="1rem"
-            backgroundColor= "#cfcfcf57"
+            backgroundColor="#cfcfcf57"
             onClick={() => {
               navigate("/explore");
             }}
@@ -135,7 +135,7 @@ const RightSidebar = () => {
             height="4rem"
             transition="all 300ms ease"
             gap="1rem"
-            backgroundColor= "#cfcfcf57"
+            backgroundColor="#cfcfcf57"
             onClick={() => {
               navigate("/library");
             }}
@@ -182,7 +182,7 @@ const RightSidebar = () => {
             height="4rem"
             transition="all 300ms ease"
             gap="1rem"
-            backgroundColor= "#cfcfcf57"
+            backgroundColor="#cfcfcf57"
             onClick={() => {
               navigate("/your_posts");
             }}
@@ -229,7 +229,7 @@ const RightSidebar = () => {
             height="4rem"
             transition="all 300ms ease"
             gap="1rem"
-            backgroundColor= "#cfcfcf57"
+            backgroundColor="#cfcfcf57"
             onClick={() => {
               navigate("/followers");
             }}

@@ -78,12 +78,12 @@ import CommentSection from "./CommentSection";
 interface createdAt {
   seconds: number;
   nanoseconds: number;
-};
+}
 
 type Props = {
   posts?: {
     caption: string;
-    createdAt: createdAt
+    createdAt: createdAt;
     image: string;
     userName: string;
     userId: string;
