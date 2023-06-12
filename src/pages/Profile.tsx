@@ -74,10 +74,7 @@ const Profile = () => {
   const btnRef = useRef<HTMLButtonElement>(null);
   const [isMobileView] = useMediaQuery("(max-width: 48em)");
   const postsRef = collection(db, "posts");
-  const q = query(
-    postsRef,
-    where("userId", "==", uuid)
-  );
+  const q = query(postsRef, where("userId", "==", uuid));
   const getPosts = () => {
     onSnapshot(q, (snapshot) => {
       const posts = snapshot?.docs?.map((doc) => ({
