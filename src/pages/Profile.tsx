@@ -76,8 +76,7 @@ const Profile = () => {
   const postsRef = collection(db, "posts");
   const q = query(
     postsRef,
-    where("userId", "==", uuid),
-    orderBy("createdAt", "desc")
+    where("userId", "==", uuid)
   );
   const getPosts = () => {
     onSnapshot(q, (snapshot) => {
@@ -85,6 +84,15 @@ const Profile = () => {
         ...(doc.data() as Posts),
         id: doc.id,
       }));
+      posts.sort((a, b) => {
+        const dateA = new Date(
+          a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000
+        );
+        const dateB = new Date(
+          b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000
+        );
+        return dateB.getTime() - dateA.getTime();
+      });
       setPosts(posts);
       dispatch(setProfilePosts(posts));
     });
