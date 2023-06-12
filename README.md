@@ -26,6 +26,7 @@ You can access live application at https://6486ef30c9aafc128bd3134b--trendify-so
 ![Comment](https://github.com/dipak2811/Trendify/assets/77386172/bedec717-8a62-4a9a-826d-7bd40938aad7)
 ![Saved Post](https://github.com/dipak2811/Trendify/assets/77386172/a9c792a7-bce7-4281-b4b4-84d6fe1f16c0)
 ![Explore](https://github.com/dipak2811/Trendify/assets/77386172/d7ad8857-5013-41d7-846d-13b27e931b29)
+![Profile](https://github.com/dipak2811/Trendify/assets/77386172/95518277-52b6-4d5f-a451-bb5e3396f81f)
 ![Followers](https://github.com/dipak2811/Trendify/assets/77386172/6825038d-1c3d-4c89-87e6-b381de89779b)
 ![Edit Profile](https://github.com/dipak2811/Trendify/assets/77386172/ab398639-ad1c-4503-b955-4517c6930127)
 
