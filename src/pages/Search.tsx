@@ -29,21 +29,6 @@ const Search = () => {
   const usersRef = collection(db, "users");
 
   useEffect(() => {
-    document.title = "Search results";
-
-    const pageStatus = {
-      isExplore: false,
-      isLibrary: false,
-      isYourPosts: false,
-      isSearch: true,
-      isProfile: false,
-      isFollower: false,
-    };
-
-    dispatch(setPageStatus(pageStatus));
-  }, [dispatch]);
-
-  useEffect(() => {
     let unsubscribe: Unsubscribe | undefined;
     const CurrentUser = auth.currentUser;
     const getUsers = async () => {

@@ -1,37 +1,43 @@
 import React from "react";
 import {
   Avatar,
-  Button,
   Flex,
   Heading,
-  Image,
-  Tag,
   Tooltip,
 } from "@chakra-ui/react";
 import Post from "./Post";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { IUser } from "../pages/Search";
+import { HomePageState } from "../redux/slice/HomePage";
 
 export type Posts = {
   caption: string;
-  createdAt: string;
+  createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
   image: string;
   userName: string;
   userId: string;
-  userPfp: string;
   id: string;
 };
 
+interface State {
+  pageDetails:HomePageState
+}
 const Feed = () => {
-  const pageDetail = useSelector((state: any) => state.pageStatus);
-  const pageStatus = pageDetail.pageStatus;
-  const pagePosts = pageDetail.posts;
-  const libraryPosts = pageDetail.libraryPosts;
-  const profilePosts = pageDetail.profilePosts;
-  const followersData = pageDetail.followersData;
-  const searchPosts = pageDetail.searchPosts;
-  const explorePosts = pageDetail.explorePosts;
-  const yourPosts = pageDetail.yourPosts;
+  const pageDetail = useSelector((state:State) => state);
+  const allData = pageDetail.pageDetails;
+  const pageStatus = allData?.pageStatus;
+  const pagePosts = allData?.posts;
+  const libraryPosts = allData?.libraryPosts;
+  const profilePosts = allData?.profilePosts;
+  const followersData = allData?.followersData;
+  const explorePosts = allData?.explorePosts;
+  const yourPosts = allData?.yourPosts;
+  console.log(pageDetail.pageDetails);
+  
   const navigate = useNavigate();
   return pageStatus?.isExplore ? (
     <Flex
@@ -49,7 +55,7 @@ const Feed = () => {
         <Post key={index} posts={post} />
       ))}
     </Flex>
-  ) : pageStatus.isLibrary ? (
+  ) : pageStatus?.isLibrary ? (
     <Flex
       flexDirection="column"
       gap="1rem"
@@ -77,61 +83,9 @@ const Feed = () => {
       <Heading as="h4" size="md">
         Your posts
       </Heading>
-      {yourPosts?.map((post: any, index: number) => (
+      {yourPosts?.map((post: Posts, index: number) => (
         <Post key={index} posts={post} />
       ))}
-    </Flex>
-  ) : pageStatus?.isSearch ? (
-    <Flex
-      flexDirection="column"
-      gap="1rem"
-      width="100%"
-      position="sticky"
-      top="5.4rem"
-      height="max-content"
-    >
-      <Flex display="flex" justifyContent="space-between" marginTop={5}>
-        <Heading as="h4" size="md">
-          Search results
-        </Heading>
-        <Button
-          backgroundColor="tomato"
-          variant="solid"
-          borderRadius={5}
-          padding={3}
-          marginBottom={2}
-          onClick={() => {
-            navigate("/home");
-          }}
-          size="small"
-        >
-          Clear Search
-        </Button>
-      </Flex>
-      {searchPosts?.length === 0 ? (
-        <Flex
-          width="100%"
-          justifyContent="center"
-          alignItems="center"
-          height="80vh"
-          flexDirection="column"
-          gap="1rem"
-        >
-          <Image
-            alt=""
-            src="https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png"
-            width="50%"
-            height="50%"
-          />
-          <Heading as="h4" size="md" color="gray.500">
-            No search results found
-          </Heading>
-        </Flex>
-      ) : (
-        searchPosts?.map((post: Posts, index: number) => (
-          <Post key={index} posts={post} />
-        ))
-      )}
     </Flex>
   ) : pageStatus?.isProfile ? (
     <Flex
@@ -172,7 +126,7 @@ const Feed = () => {
       height="max-content"
     >
       <Flex gap="2rem" alignItems="center" flexWrap="wrap" marginBottom="1rem">
-        {followersData?.map((user: any, index: number) => (
+        {followersData?.map((user: IUser, index: number) => (
           <Tooltip label={user?.username} openDelay={400} key={index}>
             <Avatar
               width="16"

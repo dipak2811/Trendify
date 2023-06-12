@@ -14,7 +14,6 @@ export interface HomePageState {
     isExplore: boolean;
     isLibrary: boolean;
     isYourPosts: boolean;
-    isSearch: boolean;
     isProfile: boolean;
     isFollower: boolean;
   };
@@ -32,7 +31,6 @@ const initialState: HomePageState = {
     isExplore: false,
     isLibrary: false,
     isYourPosts: false,
-    isSearch: false,
     isProfile: false,
     isFollower: false,
   },

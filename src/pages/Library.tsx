@@ -23,7 +23,6 @@ const Library = () => {
       isExplore: false,
       isLibrary: true,
       isYourPosts: false,
-      isSearch: false,
       isProfile: false,
       isFollower: false,
     };

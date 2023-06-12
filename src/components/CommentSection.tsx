@@ -28,10 +28,22 @@ import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
-const CommentSection = ({ postId }: any) => {
-  const [comments, setComments] = useState<any>([]);
+interface Comment {
+  id: string
+  comment: string;
+  userId: string;
+  userName: string;
+  userPfp: string;
+}
+
+interface Props {
+  postId: string;
+}
+
+const CommentSection = ({ postId }: Props) => {
+  const [comments, setComments] = useState<Comment[]>([]);
   const [comment, setComment] = useState("");
-  const [selectedComment, setSelectedComment] = useState<any | null>(null);
+  const [selectedComment, setSelectedComment] = useState<Comment | null>(null);
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
   const auth = getAuth(app);
@@ -45,8 +57,8 @@ const CommentSection = ({ postId }: any) => {
       collection(db, "posts", postId, "comments"),
       (snapshot) => {
         const updatedComments = snapshot.docs.map((doc) => ({
+          ...(doc.data() as Comment),
           id: doc.id,
-          ...doc.data(),
         }));
         setComments(updatedComments);
       }
@@ -55,7 +67,8 @@ const CommentSection = ({ postId }: any) => {
       unsubscribe();
     };
   }, [postId]);
-
+  console.log(comments);
+  
   const handleAddComment = async () => {
     if (comment.length > 0 && comment.length <= 100) {
       await addDoc(collection(db, "posts", postId, "comments"), {
@@ -93,7 +106,7 @@ const CommentSection = ({ postId }: any) => {
   return (
     <Flex direction="column" height="91vh">
       <Flex flexGrow={1} direction="column" overflowY="scroll">
-        {comments.map((comment: any) => (
+        {comments.map((comment: Comment) => (
           <Flex
             key={comment.id}
             width="100%"

@@ -37,7 +37,6 @@ const Explore = () => {
       isExplore: true,
       isLibrary: false,
       isYourPosts: false,
-      isSearch: false,
       isProfile: false,
       isFollower: false,
     };

@@ -75,14 +75,18 @@ import {
 } from "@chakra-ui/react";
 import CommentSection from "./CommentSection";
 
+interface createdAt {
+  seconds: number;
+  nanoseconds: number;
+};
+
 type Props = {
   posts?: {
     caption: string;
-    createdAt: string;
+    createdAt: createdAt
     image: string;
     userName: string;
     userId: string;
-    userPfp: string;
     id: string;
   };
 };
@@ -238,7 +242,7 @@ const Post = (props: Props) => {
     }
   };
   const [postLoading, setPostLoading] = useState(true);
-  function formatCreatedAt(createdAt: any) {
+  function formatCreatedAt(createdAt: createdAt) {
     const milliseconds =
       createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000;
     const timeElapsed = Date.now() - milliseconds;
@@ -411,7 +415,6 @@ const Post = (props: Props) => {
           createdAt: props?.posts?.createdAt,
           userId: props?.posts?.userId,
           userName: props?.posts?.userName,
-          // userPfp: props?.posts?.userPfp,
         }
       )
         .then(() => {
@@ -704,7 +707,7 @@ const Post = (props: Props) => {
           <DrawerCloseButton />
           <DrawerHeader>Comments</DrawerHeader>
           <DrawerBody>
-            <CommentSection postId={props?.posts?.id} />
+            <CommentSection postId={props?.posts?.id || ""} />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

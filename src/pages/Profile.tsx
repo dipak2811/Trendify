@@ -43,7 +43,6 @@ const Profile = () => {
       isExplore: false,
       isLibrary: false,
       isYourPosts: false,
-      isSearch: false,
       isProfile: true,
       isFollower: false,
     };

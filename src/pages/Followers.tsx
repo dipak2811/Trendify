@@ -24,7 +24,6 @@ const Followers = () => {
       isExplore: false,
       isLibrary: false,
       isYourPosts: false,
-      isSearch: false,
       isProfile: false,
       isFollower: true,
     };
