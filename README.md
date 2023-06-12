@@ -33,12 +33,17 @@ You can access live application at https://6486ef30c9aafc128bd3134b--trendify-so
 ## Project setup
 To Run this Application on your local Machine, follow belowe steps
 1. Clone the repository:
+      <pre>
       git clone https://github.com/dipak2811/Trendify
       git checkout main
-      cd Trendify
+      cd Trendify</pre>
 2. Install the dependencies:
+      <pre>
       npm install
+      </pre>
 3. Start the development server:
+      <pre>
       npm start
+      </pre>
 
 Open http://localhost:3000 in your web browser.
