@@ -204,7 +204,7 @@ const ProfileSidebar = (props: Props) => {
           </Heading>
         </Flex>
       </Flex>
-      <Flex alignItems="center" gap="1rem">
+      <Flex alignItems="center" gap="1rem" mb="1rem">
         {auth?.currentUser?.uid === props?.uid ? (
           ""
         ) : following ? (

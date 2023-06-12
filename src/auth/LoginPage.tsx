@@ -15,13 +15,16 @@ import {
   FormLabel,
   Heading,
   Input,
-  Stack,
+  InputGroup,
+  InputRightElement,
   useToast,
 } from "@chakra-ui/react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
   const auth: Auth = getAuth(app);
   const toast = useToast();
@@ -69,70 +72,99 @@ const LoginPage: React.FC = () => {
     navigate("/signup");
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <Box
-      width="400px"
-      p={4}
-      mx="auto"
-      mt={10}
-      borderWidth={1}
-      borderRadius="md"
+      bgImage="url('https://e0.pxfuel.com/wallpapers/386/919/desktop-wallpaper-website-background-website-login-page-background.jpg')"
+      bgSize="cover"
+      bgPosition="center"
+      minHeight="100vh"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      px={4}
     >
-      <Heading as="h2" textAlign="center" mb={6}>
-        Login
-      </Heading>
-      {error && (
-        <Box
-          p={2}
-          mb={4}
-          borderWidth={1}
-          borderRadius="md"
-          borderColor="red.500"
-          color="red.500"
-          fontSize="sm"
-        >
-          {error}
-        </Box>
-      )}
-      <FormControl id="email" isRequired>
-        <FormLabel>Email address</FormLabel>
-        <Input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </FormControl>
-      <FormControl id="password" mt={4} isRequired>
-        <FormLabel>Password</FormLabel>
-        <Input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </FormControl>
-      <Flex direction="column">
-        <Button
-          colorScheme="red"
-          variant="link"
-          mt={2}
-          onClick={handleForgotPassword}
-        >
-          Forgot Password
-        </Button>
-        <Button colorScheme="blue" mt={3} onClick={handleLogin}>
+      <Box
+        width="400px"
+        p={4}
+        mx="auto"
+        mt={10}
+        borderWidth={1}
+        borderRadius="md"
+        color="white"
+      >
+        <Heading as="h2" textAlign="center" mb={6}>
           Login
-        </Button>
-        <Button
-          colorScheme="green"
-          variant="link"
-          mt={2}
-          onClick={handleSignup}
-        >
-          Don't have an account? Sign up
-        </Button>
-      </Flex>
+        </Heading>
+        {error && (
+          <Box
+            p={2}
+            mb={4}
+            borderWidth={1}
+            borderRadius="md"
+            borderColor="red.500"
+            color="red.500"
+            fontSize="sm"
+          >
+            {error}
+          </Box>
+        )}
+        <FormControl id="email" isRequired>
+          <FormLabel>Email address</FormLabel>
+          <Input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </FormControl>
+        <FormControl id="password" mt={4} isRequired>
+          <FormLabel>Password</FormLabel>
+          <InputGroup>
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <InputRightElement width="4.5rem">
+              <Button
+                h="1.75rem"
+                size="sm"
+                onClick={toggleShowPassword}
+                bg={showPassword ? "black" : "transparent"}
+                _hover={{ bg: showPassword ? "black" : "transparent" }}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </FormControl>
+        <Flex direction="column">
+          <Button
+            colorScheme="red"
+            variant="link"
+            mt={2}
+            onClick={handleForgotPassword}
+          >
+            Forgot Password
+          </Button>
+          <Button colorScheme="blue" mt={3} onClick={handleLogin}>
+            Login
+          </Button>
+          <Button
+            colorScheme="green"
+            variant="link"
+            mt={2}
+            onClick={handleSignup}
+          >
+            Don't have an account? Sign up
+          </Button>
+        </Flex>
+      </Box>
     </Box>
   );
 };
