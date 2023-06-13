@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <Box
-      bgImage="url('https://e0.pxfuel.com/wallpapers/386/919/desktop-wallpaper-website-background-website-login-page-background.jpg')"
+      bgImage="url('https://img.freepik.com/premium-photo/abstract-white-design-background-with-smooth-wavy-lines_476363-6179.jpg')"
       bgSize="cover"
       bgPosition="center"
       minHeight="100vh"
@@ -91,10 +91,11 @@ const LoginPage: React.FC = () => {
         width="400px"
         p={4}
         mx="auto"
-        mt={10}
+        // mt={10}
         borderWidth={1}
         borderRadius="md"
-        color="white"
+        borderColor="black"
+        color="black"
       >
         <Heading as="h2" textAlign="center" mb={6}>
           Login
@@ -133,10 +134,10 @@ const LoginPage: React.FC = () => {
             <InputRightElement width="4.5rem">
               <Button
                 h="1.75rem"
-                size="sm"
+                size="lg"
                 onClick={toggleShowPassword}
-                bg={showPassword ? "black" : "transparent"}
-                _hover={{ bg: showPassword ? "black" : "transparent" }}
+                variant="ghost"
+                _focus={{ boxShadow: "none" }}
               >
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
               </Button>

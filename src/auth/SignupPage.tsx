@@ -149,7 +149,7 @@ const SignupPage: React.FC = () => {
 
   return (
     <Box
-      bgImage="url('https://e0.pxfuel.com/wallpapers/386/919/desktop-wallpaper-website-background-website-login-page-background.jpg')"
+      bgImage="url('https://img.freepik.com/premium-photo/abstract-white-design-background-with-smooth-wavy-lines_476363-6179.jpg')"
       bgSize="cover"
       bgPosition="center"
       minHeight="100vh"
@@ -165,7 +165,8 @@ const SignupPage: React.FC = () => {
         mt={10}
         borderWidth={1}
         borderRadius="md"
-        color="white"
+        borderColor="black"
+        color="Black"
       >
         <Heading as="h2" textAlign="center" mb={6}>
           Sign Up
@@ -189,6 +190,7 @@ const SignupPage: React.FC = () => {
             type="file"
             accept="image/*"
             onChange={handleProfileImageChange}
+            border="none"
           />
         </FormControl>
         <FormControl id="username" mt={4} isRequired>
@@ -233,7 +235,6 @@ const SignupPage: React.FC = () => {
                 size="lg"
                 onClick={toggleShowPassword}
                 variant="ghost"
-                color="black"
                 _focus={{ boxShadow: "none" }}
               >
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
@@ -256,7 +257,6 @@ const SignupPage: React.FC = () => {
                 size="lg"
                 onClick={toggleShowConfirmPassword}
                 variant="ghost"
-                color="black"
                 _focus={{ boxShadow: "none" }}
               >
                 {showConfirmPassword ? (
