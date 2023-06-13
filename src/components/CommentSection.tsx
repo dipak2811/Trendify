@@ -101,7 +101,8 @@ const CommentSection = ({ postId }: Props) => {
       setUpdatedComment("");
     }
   };
-
+  console.log(comments,auth);
+  
   return (
     <Flex direction="column" height="91vh">
       <Flex flexGrow={1} direction="column" overflowY="scroll">
@@ -128,7 +129,7 @@ const CommentSection = ({ postId }: Props) => {
                 {comment.comment}
               </Heading>
             </Flex>
-            <Button
+           {auth.currentUser?.uid === comment.userId ?<> <Button
               size="xs"
               colorScheme="teal"
               onClick={() => {
@@ -148,7 +149,7 @@ const CommentSection = ({ postId }: Props) => {
               }}
             >
               <DeleteIcon />
-            </Button>
+            </Button></>:null}
           </Flex>
         ))}
       </Flex>
