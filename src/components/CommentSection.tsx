@@ -22,7 +22,6 @@ import {
   deleteDoc,
   doc,
   updateDoc,
-  getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -101,8 +100,7 @@ const CommentSection = ({ postId }: Props) => {
       setUpdatedComment("");
     }
   };
-  console.log(comments,auth);
-  
+
   return (
     <Flex direction="column" height="91vh">
       <Flex flexGrow={1} direction="column" overflowY="scroll">
@@ -129,27 +127,32 @@ const CommentSection = ({ postId }: Props) => {
                 {comment.comment}
               </Heading>
             </Flex>
-           {auth.currentUser?.uid === comment.userId ?<> <Button
-              size="xs"
-              colorScheme="teal"
-              onClick={() => {
-                setSelectedComment(comment);
-                setUpdatedComment(comment.comment);
-                setIsUpdateDialogOpen(true);
-              }}
-            >
-              <EditIcon />
-            </Button>
-            <Button
-              size="xs"
-              colorScheme="red"
-              onClick={() => {
-                setSelectedComment(comment);
-                setIsDeleteDialogOpen(true);
-              }}
-            >
-              <DeleteIcon />
-            </Button></>:null}
+            {auth.currentUser?.uid === comment.userId ? (
+              <>
+                {" "}
+                <Button
+                  size="xs"
+                  colorScheme="teal"
+                  onClick={() => {
+                    setSelectedComment(comment);
+                    setUpdatedComment(comment.comment);
+                    setIsUpdateDialogOpen(true);
+                  }}
+                >
+                  <EditIcon />
+                </Button>
+                <Button
+                  size="xs"
+                  colorScheme="red"
+                  onClick={() => {
+                    setSelectedComment(comment);
+                    setIsDeleteDialogOpen(true);
+                  }}
+                >
+                  <DeleteIcon />
+                </Button>
+              </>
+            ) : null}
           </Flex>
         ))}
       </Flex>

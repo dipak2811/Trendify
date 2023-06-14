@@ -700,7 +700,7 @@ const Post = (props: Props) => {
         isOpen={isCommentOpen}
         placement="right"
         onClose={onCommentClose}
-        size="full"
+        size="sm"
       >
         <DrawerOverlay />
         <DrawerContent>

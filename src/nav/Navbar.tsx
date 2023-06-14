@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -41,8 +41,10 @@ const Navbar = () => {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const [isOpen, setIsOpen] = useState(false);
   const [newProfilePic, setNewProfilePic] = useState("");
-  const [newBio, setNewBio] = useState("");
-  const [newEmail, setNewEmail] = useState("");
+  const [oldBio, setOldBio] = useState("");
+  const [oldEmail, setOldEmail] = useState("");
+  const [bio, setBio] = useState("");
+  const [email, setEmail] = useState("");
   const [newImageUrl, setNewImageUrl] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
   const [error, setError] = useState("");
@@ -55,8 +57,8 @@ const Navbar = () => {
   const onClose = () => {
     setIsOpen(false);
     setNewProfilePic("");
-    setNewBio("");
-    setNewEmail("");
+    setOldBio(bio);
+    setOldEmail(email);
     setError("");
   };
   const logout = () => {
@@ -119,41 +121,79 @@ const Navbar = () => {
       inputElement.click();
     }
   };
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  const user = auth.currentUser;
   const handleProfileUpdate = async () => {
-    const user = auth.currentUser;
     setError("");
     setUpdateLoading(true);
     if (!user) {
       throw new Error("User not found");
     }
     try {
-      const userDocRef = doc(db, "users", user?.uid);
-      const userDocSnapshot = await getDoc(userDocRef);
-      const userData = userDocSnapshot.data();
-      await setDoc(doc(db, "users", user?.uid), {
-        username: user?.displayName,
-        bio: newBio.trim() !== "" ? newBio.trim() : userData?.bio,
-        uid: user?.uid,
-        pfp: newImageUrl !== "" ? newImageUrl : user?.photoURL,
-        email: newEmail.trim() !== "" ? newEmail.trim() : user?.email,
-      });
-      await updateProfile(user, {
-        photoURL: newImageUrl !== "" ? newImageUrl : user?.photoURL,
-      });
-      toast({
-        title: "Profile Updated",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      if (oldEmail.trim() === "") {
+        toast({
+          title: "Email is required",
+          status: "error",
+          duration: 300,
+          isClosable: true,
+        });
+      } else if (!isValidEmail(oldEmail)) {
+        toast({
+          title: "Invalid email is required",
+          status: "error",
+          duration: 300,
+          isClosable: true,
+        });
+      }
+      if (oldBio.trim() === "") {
+        toast({
+          title: "Bio is required",
+          status: "error",
+          duration: 300,
+          isClosable: true,
+        });
+      } else {
+        await setDoc(doc(db, "users", user?.uid), {
+          username: user?.displayName,
+          bio: oldBio.trim(),
+          uid: user?.uid,
+          pfp: newImageUrl !== "" ? newImageUrl : user?.photoURL,
+          email: oldEmail.trim(),
+        });
+        await updateProfile(user, {
+          photoURL: newImageUrl !== "" ? newImageUrl : user?.photoURL,
+        });
+        toast({
+          title: "Profile Updated",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
 
-      onClose();
+        onClose();
+      }
     } catch (error) {
       setError((error as Error).message);
     }
 
     setUpdateLoading(false);
   };
+  useEffect(() => {
+    (async () => {
+      if (user?.uid) {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        const userData = userDocSnapshot.data();
+        setOldBio(userData?.bio);
+        setOldEmail(userData?.email);
+        setBio(userData?.bio);
+        setEmail(userData?.email);
+      }
+    })();
+  }, []);
 
   return (
     <Flex
@@ -250,8 +290,8 @@ const Navbar = () => {
                     <IconButton
                       as="span"
                       icon={<FaCamera />}
+                      size="1.4rem"
                       variant="ghost"
-                      size="sm"
                       aria-label="Upload Profile Picture"
                       onClick={handleIconButtonClick}
                     />
@@ -274,8 +314,8 @@ const Navbar = () => {
               <Input
                 type="text"
                 placeholder="Bio"
-                value={newBio}
-                onChange={(e) => setNewBio(e.target.value)}
+                value={oldBio}
+                onChange={(e) => setOldBio(e.target.value)}
               />
             </InputGroup>
             <InputGroup size="sm" mb={4}>
@@ -286,14 +326,15 @@ const Navbar = () => {
               <Input
                 type="email"
                 placeholder="Email Address"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
+                value={oldEmail}
+                onChange={(e) => setOldEmail(e.target.value)}
               />
             </InputGroup>
           </ModalBody>
           <ModalFooter>
             <Button
               colorScheme="blue"
+              mr={2}
               isLoading={updateLoading}
               onClick={handleProfileUpdate}
             >

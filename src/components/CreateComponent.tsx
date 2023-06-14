@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Flex,
-  Heading,
-  Image,
-  Input,
-  Button,
-  useToast,
-} from "@chakra-ui/react";
-import { BsImageFill } from "react-icons/bs";
+import { Flex, Text, Image, Input, Button, useToast } from "@chakra-ui/react";
 import {
   getStorage,
   ref,
@@ -32,6 +24,7 @@ const CreateComponent = () => {
   const storage = getStorage(app);
   const db = getFirestore(app);
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -85,24 +78,19 @@ const CreateComponent = () => {
 
   return (
     <Flex flexDirection="column" gap="2rem" width="100%" height="max-content">
-      <Heading as="h4" size="md">
-        Caption and Image are required
-      </Heading>
-      <Flex flexDirection="column" gap="0.4rem" width="100%">
+      <Flex flexDirection="column" gap="0.4rem" width="100%" mt={3}>
         <Input
           variant="filled"
-          placeholder="Caption"
+          placeholder="Enter Your Caption"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setCaption(e.target.value);
           }}
           value={caption}
         />
-        {caption.length >= 5 && caption.length <= 100 ? (
-          ""
-        ) : (
-          <Heading as="h4" size="sm" color="gray.500">
+        {submitted && (caption.length < 5 || caption.length > 100) && (
+          <Text as="h4" size="sm" color="red" className="error-message">
             Caption must be between 5 to 100 characters
-          </Heading>
+          </Text>
         )}
       </Flex>
       <Flex flexDirection="column" gap="0.4rem" width="100%">
@@ -112,22 +100,19 @@ const CreateComponent = () => {
           placeholder="Select post image"
           onChange={uploadImage}
         />
-
-        {image ? (
-          <Image src={URL.createObjectURL(image)} alt="" width="100%" />
-        ) : (
-          <>
-            <Flex alignItems="center" gap="1rem">
-              <BsImageFill size="50%" />
-              <Heading as="h4" size="md">
-                Please select an image
-              </Heading>
-            </Flex>
-            <Heading as="h4" size="sm" color="gray.500">
-              Image is required
-            </Heading>
-          </>
+        {submitted && !image && (
+          <Text as="h4" size="sm" color="red" className="error-message">
+            Image is required
+          </Text>
         )}
+        {image ? (
+          <Image
+            src={URL.createObjectURL(image)}
+            alt=""
+            width="70%"
+            aspectRatio="16/9"
+          />
+        ) : null}
       </Flex>
       {caption.length >= 5 && caption.length <= 100 && image ? (
         <Button
@@ -140,7 +125,14 @@ const CreateComponent = () => {
           Create post
         </Button>
       ) : (
-        <Button backgroundColor="#ACBCFF" marginBottom="1rem" disabled>
+        <Button
+          backgroundColor="#ACBCFF"
+          marginBottom="1rem"
+          onClick={() => {
+            setSubmitted(true);
+          }}
+          disabled
+        >
           Create post
         </Button>
       )}

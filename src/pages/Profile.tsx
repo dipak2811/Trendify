@@ -82,13 +82,27 @@ const Profile = () => {
         id: doc.id,
       }));
       posts.sort((a, b) => {
-        const dateA = new Date(
-          a.createdAt.seconds * 1000 + a.createdAt.nanoseconds / 1000000
-        );
-        const dateB = new Date(
-          b.createdAt.seconds * 1000 + b.createdAt.nanoseconds / 1000000
-        );
-        return dateB.getTime() - dateA.getTime();
+        const dateA = a.createdAt
+          ? new Date(
+              a.createdAt.seconds * 1000 +
+                (a.createdAt.nanoseconds || 0) / 1000000
+            )
+          : null;
+        const dateB = b.createdAt
+          ? new Date(
+              b.createdAt.seconds * 1000 +
+                (b.createdAt.nanoseconds || 0) / 1000000
+            )
+          : null;
+        if (dateA && dateB) {
+          return dateB.getTime() - dateA.getTime();
+        } else if (dateA) {
+          return -1;
+        } else if (dateB) {
+          return 1;
+        } else {
+          return 0;
+        }
       });
       setPosts(posts);
       dispatch(setProfilePosts(posts));

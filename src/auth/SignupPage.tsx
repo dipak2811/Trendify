@@ -30,10 +30,12 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import Loader from "../components/Loader";
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [bio, setBio] = useState("");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -83,7 +85,7 @@ const SignupPage: React.FC = () => {
         setError("Email is already registered");
         return;
       }
-
+      setIsLoading(true);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -107,7 +109,7 @@ const SignupPage: React.FC = () => {
         pfp: user?.photoURL,
         email: user?.email,
       });
-
+      setIsLoading(false);
       navigate("/login");
     } catch (error) {
       setError((error as Error).message);
@@ -148,136 +150,146 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <Box
-      bgImage="url('https://img.freepik.com/premium-photo/abstract-white-design-background-with-smooth-wavy-lines_476363-6179.jpg')"
-      bgSize="cover"
-      bgPosition="center"
-      minHeight="100vh"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      px={4}
-    >
-      <Box
-        width="400px"
-        p={4}
-        mx="auto"
-        mt={10}
-        borderWidth={1}
-        borderRadius="md"
-        borderColor="black"
-        color="Black"
-      >
-        <Heading as="h2" textAlign="center" mb={6}>
-          Sign Up
-        </Heading>
-        {error && (
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Box
+          bgImage="url('https://img.freepik.com/premium-photo/abstract-white-design-background-with-smooth-wavy-lines_476363-6179.jpg')"
+          bgSize="cover"
+          bgPosition="center"
+          minHeight="100vh"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          px={4}
+        >
           <Box
-            p={2}
-            mb={4}
+            width="400px"
+            p={4}
+            mx="auto"
+            mt={10}
             borderWidth={1}
             borderRadius="md"
-            borderColor="red.500"
-            color="red.500"
-            fontSize="sm"
+            borderColor="black"
+            color="Black"
           >
-            {error}
+            <Heading as="h2" textAlign="center" mb={6}>
+              Sign Up
+            </Heading>
+            {error && (
+              <Box
+                p={2}
+                mb={4}
+                borderWidth={1}
+                borderRadius="md"
+                borderColor="red.500"
+                color="red.500"
+                fontSize="sm"
+              >
+                {error}
+              </Box>
+            )}
+            <FormControl id="profileImage" isRequired>
+              <FormLabel>Profile Image</FormLabel>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImageChange}
+                border="none"
+              />
+            </FormControl>
+            <FormControl id="username" mt={4} isRequired>
+              <FormLabel>Username</FormLabel>
+              <Input
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormControl>
+            <FormControl id="bio" mt={4} isRequired>
+              <FormLabel>Bio</FormLabel>
+              <Input
+                type="text"
+                placeholder="Enter your bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value.trimStart())}
+              />
+            </FormControl>
+            <FormControl id="email" mt={4} isRequired>
+              <FormLabel>Email address</FormLabel>
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormControl>
+            <FormControl id="password" mt={4} isRequired>
+              <FormLabel>Password</FormLabel>
+              <InputGroup>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button
+                    h="1.75rem"
+                    size="lg"
+                    onClick={toggleShowPassword}
+                    variant="ghost"
+                    _focus={{ boxShadow: "none" }}
+                  >
+                    {showPassword ? (
+                      <AiOutlineEyeInvisible />
+                    ) : (
+                      <AiOutlineEye />
+                    )}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+            <FormControl id="confirmPassword" mt={4} isRequired>
+              <FormLabel>Confirm Password</FormLabel>
+              <InputGroup>
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button
+                    h="1.75rem"
+                    size="lg"
+                    onClick={toggleShowConfirmPassword}
+                    variant="ghost"
+                    _focus={{ boxShadow: "none" }}
+                  >
+                    {showConfirmPassword ? (
+                      <AiOutlineEyeInvisible />
+                    ) : (
+                      <AiOutlineEye />
+                    )}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+            <Flex direction="column">
+              <Button colorScheme="blue" mt={6} onClick={handleSignup}>
+                Sign Up
+              </Button>
+              <Button variant="link" mt={4} onClick={() => navigate("/login")}>
+                Already have an account? Sign in
+              </Button>
+            </Flex>
           </Box>
-        )}
-        <FormControl id="profileImage" isRequired>
-          <FormLabel>Profile Image</FormLabel>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={handleProfileImageChange}
-            border="none"
-          />
-        </FormControl>
-        <FormControl id="username" mt={4} isRequired>
-          <FormLabel>Username</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </FormControl>
-        <FormControl id="bio" mt={4} isRequired>
-          <FormLabel>Bio</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter your bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value.trimStart())}
-          />
-        </FormControl>
-        <FormControl id="email" mt={4} isRequired>
-          <FormLabel>Email address</FormLabel>
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </FormControl>
-        <FormControl id="password" mt={4} isRequired>
-          <FormLabel>Password</FormLabel>
-          <InputGroup>
-            <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="lg"
-                onClick={toggleShowPassword}
-                variant="ghost"
-                _focus={{ boxShadow: "none" }}
-              >
-                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
-        <FormControl id="confirmPassword" mt={4} isRequired>
-          <FormLabel>Confirm Password</FormLabel>
-          <InputGroup>
-            <Input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="lg"
-                onClick={toggleShowConfirmPassword}
-                variant="ghost"
-                _focus={{ boxShadow: "none" }}
-              >
-                {showConfirmPassword ? (
-                  <AiOutlineEyeInvisible />
-                ) : (
-                  <AiOutlineEye />
-                )}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
-        <Flex direction="column">
-          <Button colorScheme="blue" mt={6} onClick={handleSignup}>
-            Sign Up
-          </Button>
-          <Button variant="link" mt={4} onClick={() => navigate("/login")}>
-            Already have an account? Sign in
-          </Button>
-        </Flex>
-      </Box>
-    </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

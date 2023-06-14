@@ -270,7 +270,7 @@ const RightSidebar = () => {
           </Flex>
         )}
       </Flex>
-      <Tooltip openDelay={400} label="Create shit">
+      <Tooltip openDelay={400} label="Create Post">
         <Button
           leftIcon={<IoMdCreate />}
           backgroundColor="#ACBCFF"
