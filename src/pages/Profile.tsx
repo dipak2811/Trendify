@@ -23,7 +23,6 @@ import {
   query,
   onSnapshot,
   where,
-  orderBy,
 } from "firebase/firestore";
 import { app } from "../firebase";
 import Loader from "../components/Loader";

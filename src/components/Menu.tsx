@@ -1,35 +1,52 @@
-import { useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
+import React, { ReactEventHandler } from "react";
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Heading,
+  Portal,
+} from "@chakra-ui/react";
+import { BiDotsVerticalRounded, BiEdit, BiTrash } from "react-icons/bi";
 
-const MenuLists = ({ onClose }:any) => {
-  const menuRoot = useRef(document.getElementById("menu-root"));
-  const el = useRef(document.createElement("div"));
-
-  useEffect(() => {
-    const menuElement = el.current;
-
-    if (menuRoot.current && menuElement) {
-      menuRoot.current.appendChild(menuElement);
-    }
-
-    return () => {
-      if (menuRoot.current && menuElement) {
-        menuRoot.current.removeChild(menuElement);
-      }
-    };
-  }, []);
-
-  return createPortal(
-    <div className="menu-list">
-      <ul>
-        <li>Menu Item 1</li>
-        <li>Menu Item 2</li>
-        <li>Menu Item 3</li>
-      </ul>
-      <button onClick={onClose}>Close</button>
-    </div>,
-    el.current
-  );
+type MyMenuProps = {
+  onEditOpen: ReactEventHandler;
+  onOpen: ReactEventHandler;
 };
 
-export default MenuLists;
+const menuListStyles: React.CSSProperties = {
+  position: "absolute",
+  zIndex: 9999,
+};
+
+const MyMenu: React.FC<MyMenuProps> = ({ onEditOpen, onOpen }) => (
+  <Menu>
+    {({ isOpen }) => (
+      <>
+        <MenuButton>
+          <BiDotsVerticalRounded size="1.6rem" />
+        </MenuButton>
+        {isOpen && (
+          <Portal>
+            <MenuList style={menuListStyles}>
+              <MenuItem gap="0.5rem" onClick={onEditOpen}>
+                <BiEdit size={20} color="#90CDF4" />
+                <Heading as="h4" size="sm" color="#90CDF4">
+                  Edit
+                </Heading>
+              </MenuItem>
+              <MenuItem gap="0.5rem" onClick={onOpen}>
+                <BiTrash size={20} color="red" />
+                <Heading as="h4" size="sm" color="red">
+                  Delete
+                </Heading>
+              </MenuItem>
+            </MenuList>
+          </Portal>
+        )}
+      </>
+    )}
+  </Menu>
+);
+
+export default MyMenu;

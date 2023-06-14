@@ -14,12 +14,7 @@ import {
   Skeleton,
   Icon,
 } from "@chakra-ui/react";
-import {
-  BiDotsVerticalRounded,
-  BiCommentDetail,
-  BiEdit,
-  BiTrash,
-} from "react-icons/bi";
+import { BiCommentDetail } from "react-icons/bi";
 import {
   BsHeart,
   BsBookmark,
@@ -28,7 +23,7 @@ import {
 } from "react-icons/bs";
 import { app } from "../firebase";
 import { getAuth } from "firebase/auth";
-import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Menu } from "@chakra-ui/react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -74,6 +69,7 @@ import {
   DrawerCloseButton,
 } from "@chakra-ui/react";
 import CommentSection from "./CommentSection";
+import MyMenu from "./Menu";
 
 interface createdAt {
   seconds: number;
@@ -511,23 +507,7 @@ const Post = (props: Props) => {
         </Flex>
         {props?.posts?.userId === auth?.currentUser?.uid ? (
           <Menu>
-            <MenuButton>
-              <BiDotsVerticalRounded size="1.6rem" />
-            </MenuButton>
-            <MenuList>
-              <MenuItem gap="0.5rem" onClick={onEditOpen}>
-                <BiEdit size={20} color="#90CDF4" />
-                <Heading as="h4" size="sm" color="#90CDF4">
-                  Edit
-                </Heading>
-              </MenuItem>
-              <MenuItem gap="0.5rem" onClick={onOpen}>
-                <BiTrash size={20} color="red" />
-                <Heading as="h4" size="sm" color="red">
-                  Delete
-                </Heading>
-              </MenuItem>
-            </MenuList>
+            <MyMenu onEditOpen={onEditOpen} onOpen={onOpen} />
             {/* edit modal stuff */}
             <Modal isOpen={isEditOpen} onClose={onEditClose}>
               <ModalOverlay />
