@@ -2,7 +2,7 @@
 Trendify is a social media web application build using Reactjs with typescript, Redux-toolkit for state management, Chakra-ui for components, Firebase as Realtime database.
 
 ## Live Demo
-You can access live application at https://6486ef30c9aafc128bd3134b--trendify-social-app.netlify.app/
+You can access live application at https://6489cc58a8cc9130d11d6ec3--trendify-social-app.netlify.app
 
 ## Features
 - User authentication and authorization (Firebase Auth)
