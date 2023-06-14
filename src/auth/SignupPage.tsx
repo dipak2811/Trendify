@@ -166,13 +166,14 @@ const SignupPage: React.FC = () => {
         >
           <Box
             width="400px"
-            p={4}
+            p={8}
             mx="auto"
             mt={10}
             borderWidth={1}
-            borderRadius="md"
-            borderColor="black"
+            borderRadius="3xl"
             color="Black"
+            backgroundColor="white"
+            boxShadow="rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"
           >
             <Heading as="h2" textAlign="center" mb={6}>
               Sign Up
@@ -206,6 +207,7 @@ const SignupPage: React.FC = () => {
                 placeholder="Enter your username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                borderColor="black"
               />
             </FormControl>
             <FormControl id="bio" mt={4} isRequired>
@@ -215,6 +217,7 @@ const SignupPage: React.FC = () => {
                 placeholder="Enter your bio"
                 value={bio}
                 onChange={(e) => setBio(e.target.value.trimStart())}
+                borderColor="black"
               />
             </FormControl>
             <FormControl id="email" mt={4} isRequired>
@@ -224,6 +227,7 @@ const SignupPage: React.FC = () => {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                borderColor="black"
               />
             </FormControl>
             <FormControl id="password" mt={4} isRequired>
@@ -234,6 +238,7 @@ const SignupPage: React.FC = () => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  borderColor="black"
                 />
                 <InputRightElement width="4.5rem">
                   <Button
@@ -260,6 +265,7 @@ const SignupPage: React.FC = () => {
                   placeholder="Confirm your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  borderColor="black"
                 />
                 <InputRightElement width="4.5rem">
                   <Button

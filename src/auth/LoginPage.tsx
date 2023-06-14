@@ -90,17 +90,17 @@ const LoginPage: React.FC = () => {
           display="flex"
           alignItems="center"
           justifyContent="center"
+          mx="0"
           px={4}
         >
           <Box
             width="400px"
-            p={4}
+            p={8}
             mx="auto"
-            // mt={10}
             borderWidth={1}
-            borderRadius="md"
-            borderColor="black"
-            color="black"
+            borderRadius="3xl"
+            backgroundColor="white"
+            boxShadow="rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"
           >
             <Heading as="h2" textAlign="center" mb={6}>
               Login
@@ -125,6 +125,7 @@ const LoginPage: React.FC = () => {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                borderColor="black"
               />
             </FormControl>
             <FormControl id="password" mt={4} isRequired>
@@ -135,6 +136,7 @@ const LoginPage: React.FC = () => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  borderColor="black"
                 />
                 <InputRightElement width="4.5rem">
                   <Button
@@ -154,14 +156,6 @@ const LoginPage: React.FC = () => {
               </InputGroup>
             </FormControl>
             <Flex direction="column">
-              <Button
-                colorScheme="red"
-                variant="link"
-                mt={2}
-                onClick={handleForgotPassword}
-              >
-                Forgot Password
-              </Button>
               <Button colorScheme="blue" mt={3} onClick={handleLogin}>
                 Login
               </Button>
@@ -172,6 +166,14 @@ const LoginPage: React.FC = () => {
                 onClick={handleSignup}
               >
                 Don't have an account? Sign up
+              </Button>
+              <Button
+                colorScheme="red"
+                variant="link"
+                mt={2}
+                onClick={handleForgotPassword}
+              >
+                Forgot Password
               </Button>
             </Flex>
           </Box>
