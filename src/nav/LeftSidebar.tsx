@@ -50,7 +50,7 @@ const LeftSidebar = () => {
   return (
     <Flex
       position={isMobileOrTablet ? "unset" : "sticky"}
-      top="8rem"
+      top="84px"
       height="max-content"
       flexDirection="column"
       gap="1rem"
